@@ -344,12 +344,27 @@ function getSingleCertHtml(cert) {
             </div>
             
             ${cert.type === 'pdf' ? 
-                `<iframe src="${cert.file}#toolbar=0&navpanes=0&scrollbar=0" style="width:100%;height:500px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.3);border:3px solid var(--border);" frameborder="0"></iframe>` :
-                `<div style="position:relative;display:inline-block;">
+                `
+                <div class="pdf-iframe-wrapper">
+                    <iframe 
+                        src="${cert.file}#toolbar=0&navpanes=0&scrollbar=0&view=FitH" 
+                        frameborder="0">
+                    </iframe>
+                </div>
+                <p style="text-align:center; margin-top:1rem; color:var(--muted); font-size:0.9rem;">
+                    Not displaying properly? 
+                    <a href="${cert.file}" target="_blank" style="color:var(--accent); text-decoration:underline;">Open PDF directly</a> 
+                    or 
+                    <a href="${cert.file}" download style="color:var(--accent); text-decoration:underline;">Download</a>
+                </p>
+                ` :
+                `
+                <div style="position:relative;display:inline-block;">
                     <img src="${cert.file}" alt="${cert.name}" 
                          style="max-width:100%;max-height:500px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.3);cursor:pointer;transition:transform 0.3s ease;"
                          onclick="this.style.transform=(this.style.transform==='scale(1.05)')?'scale(1)':'scale(1.05)'; event.stopPropagation();">
-                </div>`
+                </div>
+                `
             }
             
             <div style="margin-top:2.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
