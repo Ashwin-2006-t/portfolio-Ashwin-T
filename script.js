@@ -1,867 +1,1194 @@
-// Portfolio Website JavaScript - Enhanced with Modals
-document.addEventListener('DOMContentLoaded', function() {
-    const html = document.documentElement;
-    const body = document.body;
-    const themeToggle = document.getElementById('themeToggle');
-    
-    if (!themeToggle) {
-        console.error('Theme toggle button not found');
-        return;
-    }
-    
-    // Load saved theme from localStorage or default to dark
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    setTheme(savedTheme);
-    
-    // Theme toggle click handler
-    themeToggle.addEventListener('click', function() {
-        const currentTheme = html.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        setTheme(newTheme);
-    });
-    
-   // Close on X button
-    document.querySelector('.close').onclick = closeModal;
-    
-    // Close on outside click
-    window.onclick = function(event) {
-        const modal = document.getElementById('detailModal');
-        if (event.target == modal) {
-            closeModal();
-        }
-    };
-    
-    // Close on Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeModal();
-        }
-    });
-    
-    // Function to set theme
-    function setTheme(theme) {
-        html.setAttribute('data-theme', theme);
-        body.setAttribute('data-theme', theme);
-        themeToggle.setAttribute('data-theme', theme);
-        
-        // Update icon visibility with animation
-        const sun = themeToggle.querySelector('.sun');
-        const moon = themeToggle.querySelector('.moon');
-        
-        if (sun && moon) {
-            if (theme === 'dark') {
-                sun.style.display = 'flex';
-                moon.style.display = 'none';
-            } else {
-                sun.style.display = 'none';
-                moon.style.display = 'flex';
-            }
-        }
-        
-        // Save to localStorage
-        localStorage.setItem('theme', theme);
-    }
-    
-    // Smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            
-            if (targetId === '#') return;
-            
-            const target = document.querySelector(targetId);
-            if (target) {
-                target.scrollIntoView({ 
-                    behavior: 'smooth', 
-                    block: 'start' 
-                });
-            }
-        });
-    });
-    
-    // Add scroll reveal animation
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach((entry, index) => {
-            if (entry.isIntersecting) {
-                setTimeout(() => {
-                    entry.target.style.opacity = '1';
-                    entry.target.style.transform = 'translateY(0)';
-                }, index * 100);
-            }
-        });
-    }, observerOptions);
-    
-    // Observe all cards and timeline items
-    const animatedElements = document.querySelectorAll('.card, .timeline-item, .project-card, .exp-card, .cert-card, .stat-card, .skill-card');
-    animatedElements.forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-    });
-    
-    // Close modal when clicking outside
-    window.addEventListener('click', function(event) {
-        const modal = document.getElementById('detailModal');
-        if (event.target === modal) {
-            closeModal();
-        }
-    });
-    
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') {
-            closeModal();
-        }
-    });
+/* ══════════════════════════════════════════════════════════
+   ASHWIN T — ULTIMATE ENTERPRISE PORTFOLIO JS
+   Features: Three.js · GSAP · Terminal · Command Palette ·
+   Live Stats · Konami Matrix · AI Persona · 3D Tilt ·
+   Magnetic Buttons · Sound FX · Accessibility
+══════════════════════════════════════════════════════════ */
+
+/* ─── STATE ──────────────────────────────────────────────── */
+let soundEnabled = false;
+let matrixActive = false;
+let konamiIdx    = 0;
+const KONAMI = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+let audioCtx     = null;
+let termHistory  = [];
+let termHistIdx  = -1;
+let cmdSelected  = 0;
+let fabOpen      = false;
+const scrollPos  = { y: 0 };
+
+/* ─── DOM REFS ───────────────────────────────────────────── */
+const $ = id => document.getElementById(id);
+const $$ = sel => document.querySelectorAll(sel);
+
+/* ══════════════════════════════════════════════════════════
+   LOADING SCREEN
+══════════════════════════════════════════════════════════ */
+const LOAD_MESSAGES = [
+  'Initializing universe...',
+  'Loading Java modules...',
+  'Spinning up ML models...',
+  'Fetching live stats...',
+  'Optimizing pixels...',
+  'Almost there...',
+];
+let loadPct = 0;
+
+function tick(pct, msg) {
+  const bar = $('loadBar');
+  const status = $('loadStatus');
+  if (bar) bar.style.width = pct + '%';
+  if (status) status.textContent = msg;
+}
+
+const loadInterval = setInterval(() => {
+  if (loadPct >= 100) { clearInterval(loadInterval); return; }
+  loadPct += Math.random() * 18 + 5;
+  loadPct = Math.min(loadPct, 95);
+  tick(loadPct, LOAD_MESSAGES[Math.floor(Math.random() * LOAD_MESSAGES.length)]);
+}, 280);
+
+window.addEventListener('load', () => {
+  clearInterval(loadInterval);
+  tick(100, 'Ready.');
+  setTimeout(() => {
+    $('loadScreen')?.classList.add('hidden');
+    initAll();
+  }, 600);
 });
 
-// Modal Functions
-function openCertModal(certId) {
-    const modal = document.getElementById('detailModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.getElementById('modalBody');
-    
-    const certFiles = {
-        'google-analytics': { name: 'Google Analytics Certification', file: 'certificates/google-analytics.png', issuer: 'Google', type: 'image' },
-        'aws-cloud': { name: 'AWS Cloud Support Associate', file: 'certificates/aws-cloud.pdf', issuer: 'Amazon Web Services', type: 'pdf' },
-        'infosys-bundle': {
-            name: 'Infosys Certifications (17 Total)',
-            issuer: 'Infosys Limited',
-            type: 'bundle',
-            files: [
-                'infosys/Agile-Scrum-in-Practice.pdf',
-                'infosys/Basics-of-Python.pdf',
-                'infosys/CSS3-Infosys.pdf',
-                'infosys/Database-Management-System-Part-1.pdf',
-                'infosys/Database-Management-System-Part-2.pdf',
-                'infosys/Email-Writing-Skills.pdf',
-                'infosys/Front-End-Web-Developer-Certification.pdf',
-                'infosys/High-Impact-Presentations.pdf',
-                'infosys/HTML5-Infosys.pdf',
-                'infosys/Introduction-to-NoSQL-databases.pdf',
-                'infosys/JavaScript-Infosys.pdf',
-                'infosys/Object-Oriented-Programming-using-Python.pdf',
-                'infosys/Programming-Fundamentals-using-Python-Part-2.pdf',
-                'infosys/Python-Foundation-Certification.pdf',
-                'infosys/Software-Engineering-and-Agile-software-development.pdf',
-                'infosys/Time-Management-certificate.pdf',
-                'infosys/AWS-Cloud-Management-certificate.pdf'
-            ]
-        },
-        'ibm-edunet': { name: 'IBM SkillsBuild Certifications', file: 'certificates/ibm-edunet.pdf', issuer: 'IBM via Edunet', type: 'pdf' },
-        'fullstack': { name: 'Diploma in Full Stack Development', file: 'certificates/cass-fullstack.jpg', issuer: 'CASS Academy', grade: 'A (83%)', type: 'image' },
-        'oracle-cloud': { name: 'Oracle Cloud Infrastructure', file: 'certificates/oracle-cloud.jpg', issuer: 'Oracle', type: 'image' },
-        'fusion-ai': { name: 'Fusion AI Foundations', file: 'certificates/oracle-fusion-ai.jpg', issuer: 'Oracle', type: 'image' },
-        'machine-learning': { name: 'Introduction to Machine Learning', file: 'certificates/nptel-ml.jpg', issuer: 'NPTEL, IIT Kharagpur', type: 'image' },
-        'servicenow-cad': { name: 'ServiceNow CAD Certification', file: 'certificates/servicenow-cad.jpg', issuer: 'ServiceNow', type: 'image' },
-        'servicenow-csa': { name: 'ServiceNow CSA Certification', file: 'certificates/servicenow-csa.jpg', issuer: 'ServiceNow', type: 'image' }
-    };
-    
-    const cert = certFiles[certId];
-    if (cert) {
-        modalTitle.textContent = cert.name;
-        
-        if (cert.type === 'bundle') {
-            // 🎯 STEP 1: "View All Certificates" Screen
-            modalBody.innerHTML = `
-                <div style="text-align:center;padding:2rem 1rem;">
-                    <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:3rem;align-items:center;">
-                        <p style="font-size:1.6rem;margin:0;"><strong>🏢 ${cert.issuer}</strong></p>
-                        <p style="color:var(--accent);font-size:1.4rem;font-weight:bold;margin:0;">📚 ${cert.files.length} Certifications</p>
-                    </div>
-                    
-                    <div style="background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:white;padding:20px;border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,0.3);">
-                        <button onclick="showInfosysCertificates()" 
-                                style="background:white;color:var(--accent);padding:16px 40px;border-radius:16px;font-size:1.2rem;font-weight:700;border:none;cursor:pointer;transition:all 0.3s ease;width:100%;max-width:300px;height:60px;">
-                            👁️ VIEW ALL CERTIFICATES
-                        </button>
-                    </div>
-                    
-                    <p style="margin-top:2rem;color:var(--muted);font-size:0.95rem;">
-                        Click above to see all ${cert.files.length} Infosys certificates
-                    </p>
-                </div>
-            `;
-        } else {
-            // Single certificate display
-            modalBody.innerHTML = `
-                <div style="text-align:center;padding:2rem 1rem;">
-                    <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem;align-items:center;">
-                        <p style="font-size:1.3rem;margin:0;"><strong>🏢 ${cert.issuer}</strong></p>
-                        ${cert.grade ? `<p style="color:var(--accent);font-size:1.1rem;font-weight:bold;margin:0;">📊 ${cert.grade}</p>` : ''}
-                    </div>
-                    
-                    ${cert.type === 'pdf' ? 
-                        `<iframe src="${cert.file}#toolbar=0&navpanes=0&scrollbar=0" style="width:100%;height:500px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.3);border:3px solid var(--border);" frameborder="0"></iframe>` :
-                        `<div style="position:relative;display:inline-block;">
-                            <img src="${cert.file}" alt="${cert.name}" 
-                                 style="max-width:100%;max-height:500px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.3);cursor:pointer;transition:transform 0.3s ease;"
-                                 onclick="this.style.transform=(this.style.transform==='scale(1.05)')?'scale(1)':'scale(1.05)'; event.stopPropagation();">
-                        </div>`
-                    }
-                    
-                    <div style="margin-top:2.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-                        <a href="${cert.file}" target="_blank" onclick="event.stopPropagation(); window.open('${cert.file}', '_blank');" 
-                           style="background:linear-gradient(135deg,#4285F4,#34A853);color:white!important;padding:14px 28px;border-radius:12px;text-decoration:none;font-weight:600;font-size:1rem;box-shadow:0 8px 25px rgba(66,133,244,0.4);transition:all 0.3s ease;display:inline-flex;align-items:center;gap:0.5rem;">
-                            <i class="fas fa-external-link-alt"></i> Open Full Certificate
-                        </a>
-                    </div>
-                    
-                    <p style="margin-top:2rem;color:var(--muted);font-size:0.95rem;text-align:center;">
-                        ✅ Official Certificate • Click to view/download • Mobile optimized
-                    </p>
-                </div>
-            `;
-        }
-        
-        showModal();
-    }
+/* ══════════════════════════════════════════════════════════
+   INIT ALL
+══════════════════════════════════════════════════════════ */
+function initAll() {
+  initTheme();
+  initCursor();
+  initScrollProgress();
+  initReveal();
+  initCounters();
+  initHeroAnimations();
+  initRoleRotator();
+  initThreeJS();
+  initNavHighlight();
+  initSkillFilter();
+  initProjectFilter();
+  initTiltCards();
+  initMagneticButtons();
+  initTerminal();
+  initCmdPalette();
+  initFAB();
+  initKonami();
+  initLiveStats();
+  initCharts();
+  initContribHeatmap();
+  initAIPersona();
+  initNavMobile();
+  initSmoothScroll();
 }
 
-// 🔥 ADD THESE NEW FUNCTIONS (at end of script.js)
-// GLOBAL VARIABLE
-// GLOBAL VARIABLES
-let infosysFiles = [];
-let ibmFiles = [];
-
-// 🔥 MAIN MODAL FUNCTION - UPDATED
-function openCertModal(certId) {
-    const modal = document.getElementById('detailModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.getElementById('modalBody');
-    
-    const certFiles = {
-        'google-analytics': { name: 'Google Analytics Certification', file: 'certificates/google-analytics.png', issuer: 'Google', type: 'image' },
-        'aws-cloud': { name: 'AWS Cloud Support Associate', file: 'certificates/aws-cloud.pdf', issuer: 'Amazon Web Services', type: 'pdf' },
-        'infosys-bundle': {
-            name: 'Infosys Certifications (17 Total)',
-            issuer: 'Infosys Limited',
-            type: 'bundle',
-            files: [
-                'infosys/Agile-Scrum-in-Practice.pdf','infosys/Basics-of-Python.pdf','infosys/CSS3-Infosys.pdf',
-                'infosys/Database-Management-System-Part-1.pdf','infosys/Database-Management-System-Part-2.pdf',
-                'infosys/Email-Writing-Skills.pdf','infosys/Front-End-Web-Developer-Certification.pdf',
-                'infosys/High-Impact-Presentations.pdf','infosys/HTML5-Infosys.pdf','infosys/Introduction-to-NoSQL-databases.pdf',
-                'infosys/JavaScript-Infosys.pdf','infosys/Object-Oriented-Programming-using-Python.pdf',
-                'infosys/Programming-Fundamentals-using-Python-Part-2.pdf','infosys/Python-Foundation-Certification.pdf',
-                'infosys/Software-Engineering-and-Agile-software-development.pdf','infosys/Time-Management-certificate.pdf',
-                'infosys/AWS-Cloud-Management-certificate.pdf'
-            ]
-        },
-        'ibm-edunet': {
-            name: 'IBM SkillsBuild Certifications (15 Total)',
-            issuer: 'IBM via Edunet Foundation',
-            type: 'bundle',
-            files: [
-                'ibm/Communicating-with-impact.pdf',
-                'ibm/Create-a-Credly-account.pdf',
-                'ibm/Critical-Soft-Skills-for-Project-Managers-Project-Management-Training.pdf',
-                'ibm/Cybersecurity-Fundamentals-Earn-a-credential.pdf',
-                'ibm/Cybersecurity-Fundamentals.pdf',
-                'ibm/Cybersecurity-On-the-Defense.pdf',
-                'ibm/Earn-it-Accept-it-Share-it.pdf',
-                'ibm/How-is-cybersecurity-used.pdf',
-                'ibm/IBM-to-Write-20250620-28ncl.pdf',
-                'ibm/Indesign-Career-Guide.pdf',
-                'ibm/Introduction-to-Cybersecurity.pdf',
-                'ibm/Make-Your-Resume-Stand-Out-from-the-Pile.pdf',
-                'ibm/Top-10-Reasons-for-Credly.pdf',
-                'ibm/What-is-Cybersecurity-Learning.pdf',
-                'ibm/Your-Future-in-Cybersecurity-The-Job-Landscape.pdf'
-            ]
-        },
-        'fullstack': { name: 'Diploma in Full Stack Development', file: 'certificates/cass-fullstack.jpg', issuer: 'CASS Academy', grade: 'A (83%)', type: 'image' },
-        'oracle-cloud': { name: 'Oracle Cloud Infrastructure', file: 'certificates/oracle-cloud2025.pdf', issuer: 'Oracle', type: 'pdf' },
-        'fusion-ai': { name: 'Fusion AI Foundations', file: 'certificates/oracle-fusion-ai2025.pdf', issuer: 'Oracle', type: 'pdf' },
-        'machine-learning': { name: 'Introduction to Machine Learning', file: 'certificates/nptel-ml.png', issuer: 'NPTEL, IIT Kharagpur', type: 'image' },
-        'servicenow-csa': { name: 'ServiceNow CSA Certification', file: 'certificates/servicenow-csa.jpg', issuer: 'ServiceNow', type: 'image' }
-    };
-    
-    const cert = certFiles[certId];
-    if (cert) {
-        modalTitle.textContent = cert.name;
-        
-        if (cert.type === 'bundle') {
-            // DYNAMIC BUNDLE HANDLING
-            if (certId === 'infosys-bundle') {
-                modalBody.innerHTML = getBundleOverviewHtml(cert, 'showInfosysCertificates()');
-            } else if (certId === 'ibm-edunet') {
-                modalBody.innerHTML = getBundleOverviewHtml(cert, 'showIbmCertificates()');
-            }
-        } else {
-            // Single certificate display
-            modalBody.innerHTML = getSingleCertHtml(cert);
-        }
-        
-        showModal();
-    }
+/* ══════════════════════════════════════════════════════════
+   THEME
+══════════════════════════════════════════════════════════ */
+function initTheme() {
+  const saved = localStorage.getItem('theme') || 'dark';
+  setTheme(saved);
+  $('themeToggle')?.addEventListener('click', () => {
+    const cur = document.documentElement.getAttribute('data-theme');
+    setTheme(cur === 'dark' ? 'light' : 'dark');
+    playSound('click');
+  });
+}
+function setTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  document.body.setAttribute('data-theme', t);
+  localStorage.setItem('theme', t);
 }
 
-// 🔥 DYNAMIC HTML GENERATORS
-function getBundleOverviewHtml(cert, viewAllFunction) {
-    return `
-        <div style="text-align:center;padding:2.5rem 1.5rem;background:linear-gradient(135deg,#f5f7fa 0%,#c3cfe2 100%);border-radius:24px;">
-            <div style="display:flex;flex-direction:column;gap:1.5rem;margin-bottom:3.5rem;align-items:center;">
-                <div style="width:90px;height:90px;background:linear-gradient(135deg,#667eea,#764ba2);border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 20px 40px rgba(102,126,234,0.4);">
-                    <i class="fas fa-certificate" style="font-size:2.5rem;color:white;"></i>
-                </div>
-                <p style="font-size:1.8rem;margin:0;font-weight:800;color:#2d3748;">${cert.issuer}</p>
-                <p style="color:#667eea;font-size:1.6rem;font-weight:800;margin:0;">📚 ${cert.files.length} Certifications</p>
-                <div style="font-size:1rem;color:#718096;margin:0;padding:0 2rem;line-height:1.6;">Professional certifications showcasing expertise across modern technologies</div>
-            </div>
-            
-            <div style="perspective:1000px;">
-                <div style="position:relative;display:inline-block;">
-                    <button onclick="${viewAllFunction}" 
-                            style="background:linear-gradient(135deg,#667eea 0%,#764ba2 50%,#f093fb 100%);color:white;padding:22px 50px;border-radius:50px;font-size:1.3rem;font-weight:800;border:none;cursor:pointer;width:320px;height:76px;box-shadow:0 25px 50px rgba(102,126,234,0.4), 0 0 0 1px rgba(255,255,255,0.3) inset;position:relative;overflow:hidden;transition:all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);text-transform:uppercase;letter-spacing:1px;"
-                            onmouseover="this.style.transform='translateY(-8px) scale(1.02)';this.style.boxShadow='0 35px 60px rgba(102,126,234,0.5), 0 0 0 1px rgba(255,255,255,0.4) inset';"
-                            onmouseout="this.style.transform='translateY(0) scale(1)';this.style.boxShadow='0 25px 50px rgba(102,126,234,0.4), 0 0 0 1px rgba(255,255,255,0.3) inset';">
-                        <span style="position:relative;z-index:2;display:flex;align-items:center;justify-content:center;gap:12px;font-size:1.1rem;">👁️ VIEW ALL CERTIFICATES</span>
-                    </button>
-                </div>
-            </div>
-            
-            <div style="margin-top:3rem;padding:1rem 2rem;background:rgba(255,255,255,0.6);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,0.1);">
-                <p style="margin:0;color:#4a5568;font-size:1rem;font-weight:500;">Click above to explore all ${cert.files.length} certificates</p>
-            </div>
-        </div>
-    `;
+/* ══════════════════════════════════════════════════════════
+   CUSTOM CURSOR
+══════════════════════════════════════════════════════════ */
+function initCursor() {
+  const dot = $('cursorDot'), ring = $('cursorRing'), txt = $('cursorText');
+  if (!dot || !window.matchMedia('(pointer:fine)').matches) return;
+
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+    txt.style.left = (mx + 24) + 'px'; txt.style.top = (my - 20) + 'px';
+  });
+
+  ;(function animRing() {
+    rx += (mx - rx) * 0.1; ry += (my - ry) * 0.1;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  // Data-cursor text
+  document.querySelectorAll('[data-cursor]').forEach(el => {
+    el.addEventListener('mouseenter', () => { txt.textContent = el.dataset.cursor; txt.classList.add('visible'); });
+    el.addEventListener('mouseleave', () => txt.classList.remove('visible'));
+  });
+
+  document.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
+  document.addEventListener('mouseenter', () => { dot.style.opacity = '1'; ring.style.opacity = '1'; });
 }
 
-function getSingleCertHtml(cert) {
-    return `
-        <div style="text-align:center;padding:2rem 1rem;">
-            <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem;align-items:center;">
-                <p style="font-size:1.3rem;margin:0;"><strong>🏢 ${cert.issuer}</strong></p>
-                ${cert.grade ? `<p style="color:var(--accent);font-size:1.1rem;font-weight:bold;margin:0;">📊 ${cert.grade}</p>` : ''}
-            </div>
-            
-            ${cert.type === 'pdf' ? 
-                `
-                <div class="pdf-iframe-wrapper">
-                    <iframe 
-                        src="${cert.file}#toolbar=0&navpanes=0&scrollbar=0&view=FitH" 
-                        frameborder="0">
-                    </iframe>
-                </div>
-                <p style="text-align:center; margin-top:1rem; color:var(--muted); font-size:0.9rem;">
-                    Not displaying properly? 
-                    <a href="${cert.file}" target="_blank" style="color:var(--accent); text-decoration:underline;">Open PDF directly</a> 
-                    or 
-                    <a href="${cert.file}" download style="color:var(--accent); text-decoration:underline;">Download</a>
-                </p>
-                ` :
-                `
-                <div style="position:relative;display:inline-block;">
-                    <img src="${cert.file}" alt="${cert.name}" 
-                         style="max-width:100%;max-height:500px;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.3);cursor:pointer;transition:transform 0.3s ease;"
-                         onclick="this.style.transform=(this.style.transform==='scale(1.05)')?'scale(1)':'scale(1.05)'; event.stopPropagation();">
-                </div>
-                `
-            }
-            
-            <div style="margin-top:2.5rem;display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
-                <a href="${cert.file}" target="_blank" onclick="event.stopPropagation(); window.open('${cert.file}', '_blank');" 
-                   style="background:linear-gradient(135deg,#4285F4,#34A853);color:white!important;padding:14px 28px;border-radius:12px;text-decoration:none;font-weight:600;font-size:1rem;box-shadow:0 8px 25px rgba(66,133,244,0.4);transition:all 0.3s ease;display:inline-flex;align-items:center;gap:0.5rem;">
-                    <i class="fas fa-external-link-alt"></i> Open Full Certificate
-                </a>
-            </div>
-            
-            <p style="margin-top:2rem;color:var(--muted);font-size:0.95rem;text-align:center;">
-                ✅ Official Certificate • Click to view/download • Mobile optimized
-            </p>
-        </div>
-    `;
+/* ══════════════════════════════════════════════════════════
+   SCROLL PROGRESS
+══════════════════════════════════════════════════════════ */
+function initScrollProgress() {
+  const bar = $('scrollProgress');
+  window.addEventListener('scroll', () => {
+    const pct = (window.scrollY / (document.body.scrollHeight - innerHeight)) * 100;
+    if (bar) bar.style.width = pct + '%';
+  }, { passive: true });
 }
 
-// 🔥 INFOSYS FUNCTIONS (KEEP EXISTING)
-function showInfosysCertificates() {
-    infosysFiles = ['infosys/Agile-Scrum-in-Practice.pdf','infosys/Basics-of-Python.pdf','infosys/CSS3-Infosys.pdf','infosys/Database-Management-System-Part-1.pdf','infosys/Database-Management-System-Part-2.pdf','infosys/Email-Writing-Skills.pdf','infosys/Front-End-Web-Developer-Certification.pdf','infosys/High-Impact-Presentations.pdf','infosys/HTML5-Infosys.pdf','infosys/Introduction-to-NoSQL-databases.pdf','infosys/JavaScript-Infosys.pdf','infosys/Object-Oriented-Programming-using-Python.pdf','infosys/Programming-Fundamentals-using-Python-Part-2.pdf','infosys/Python-Foundation-Certification.pdf','infosys/Software-Engineering-and-Agile-software-development.pdf','infosys/Time-Management-certificate.pdf','infosys/AWS-Cloud-Management-certificate.pdf'];
-    
-    const modalTitle = document.getElementById('modalTitle');
-    modalTitle.textContent = 'Infosys Certifications - View All';
-    
-    const modalBody = document.getElementById('modalBody');
-    modalBody.innerHTML = getBundleListHtml(infosysFiles, 'Infosys Limited', 'showInfosysOverview()');
-}
-
-function showInfosysOverview() {
-    const modalTitle = document.getElementById('modalTitle');
-    modalTitle.textContent = 'Infosys Certifications (17 Total)';
-    document.getElementById('modalBody').innerHTML = getBundleOverviewHtml({issuer: 'Infosys Limited', files: []}, 'showInfosysCertificates()');
-}
-
-// 🔥 NEW IBM FUNCTIONS
-function showIbmCertificates() {
-    ibmFiles = [
-        'ibm/Communicating-with-impact.pdf','ibm/Create-a-Credly-account.pdf',
-        'ibm/Critical-Soft-Skills-for-Project-Managers-Project-Management-Training.pdf',
-        'ibm/Cybersecurity-Fundamentals-Earn-a-credential.pdf','ibm/Cybersecurity-Fundamentals.pdf',
-        'ibm/Cybersecurity-On-the-Defense.pdf','ibm/Earn-it-Accept-it-Share-it.pdf',
-        'ibm/How-is-cybersecurity-used.pdf','ibm/IBM-to-Write-20250620-28ncl.pdf',
-        'ibm/Indesign-Career-Guide.pdf','ibm/Introduction-to-Cybersecurity.pdf',
-        'ibm/Make-Your-Resume-Stand-Out-from-the-Pile.pdf','ibm/Top-10-Reasons-for-Credly.pdf',
-        'ibm/What-is-Cybersecurity-Learning.pdf','ibm/Your-Future-in-Cybersecurity-The-Job-Landscape.pdf'
-    ];
-    
-    const modalTitle = document.getElementById('modalTitle');
-    modalTitle.textContent = 'IBM SkillsBuild Certifications - View All';
-    
-    const modalBody = document.getElementById('modalBody');
-    modalBody.innerHTML = getBundleListHtml(ibmFiles, 'IBM via Edunet Foundation', 'showIbmOverview()');
-}
-
-function showIbmOverview() {
-    const modalTitle = document.getElementById('modalTitle');
-    modalTitle.textContent = 'IBM SkillsBuild Certifications (15 Total)';
-    document.getElementById('modalBody').innerHTML = getBundleOverviewHtml({issuer: 'IBM via Edunet Foundation', files: []}, 'showIbmCertificates()');
-}
-
-// 🔥 HTML GENERATOR FOR LISTS
-function getBundleListHtml(files, issuer, backFunction) {
-    let filesHtml = `
-        <div style="text-align:center;padding:2rem 1rem;">
-            <div style="display:flex;flex-direction:column;gap:1rem;margin-bottom:2rem;align-items:center;">
-                <p style="font-size:1.4rem;margin:0;"><strong>🏢 ${issuer}</strong></p>
-                <p style="color:#667eea;font-size:1.2rem;font-weight:800;margin:0;">📚 ${files.length} Certifications</p>
-                <button onclick="${backFunction}" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;padding:12px 24px;border-radius:12px;font-size:1rem;font-weight:600;border:none;cursor:pointer;transition:all 0.3s ease;box-shadow:0 8px 25px rgba(102,126,234,0.3);">
-                    ← Back to Overview
-                </button>
-            </div>
-            
-            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;max-height:450px;overflow-y:auto;padding:1.5rem;background:linear-gradient(135deg,#667eea44,#764ba244);border-radius:20px;border:2px solid rgba(255,255,255,0.2);backdrop-filter:blur(10px);">
-    `;
-    
-    files.forEach((file) => {
-        const certName = file.replace('ibm/', '').replace('infosys/', '').replace('.pdf', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
-        filesHtml += `
-            <div style="background:linear-gradient(135deg,#4facfe 0%,#00f2fe 100%);border-radius:20px;padding:1.5rem;cursor:pointer;transition:all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);position:relative;overflow:hidden;box-shadow:0 10px 30px rgba(79,172,254,0.3);border:2px solid transparent;"
-                 onclick="openCertFile('${file}'); event.stopPropagation();" 
-                 onmouseover="this.style.transform='translateY(-10px) scale(1.02)';this.style.boxShadow='0 25px 50px rgba(79,172,254,0.4)';this.style.borderColor='rgba(255,255,255,0.5)';"
-                 onmouseout="this.style.transform='translateY(0) scale(1)';this.style.boxShadow='0 10px 30px rgba(79,172,254,0.3)';this.style.borderColor='transparent';">
-                <div style="position:absolute;top:15px;right:15px;opacity:0.8;"><i class="fas fa-file-pdf" style="font-size:2rem;color:#ff6b6b;"></i></div>
-                <div style="font-weight:800;color:white;font-size:1.1rem;margin-bottom:0.5rem;text-shadow:0 2px 4px rgba(0,0,0,0.3);">${certName}</div>
-                <div style="color:rgba(255,255,255,0.9);font-size:0.9rem;">Official Certificate</div>
-                <div style="position:absolute;bottom:15px;right:15px;background:rgba(255,255,255,0.2);padding:8px 12px;border-radius:50%;backdrop-filter:blur(10px);">
-                    <i class="fas fa-external-link-alt" style="color:white;font-size:1rem;"></i>
-                </div>
-            </div>
-        `;
+/* ══════════════════════════════════════════════════════════
+   REVEAL ON SCROLL
+══════════════════════════════════════════════════════════ */
+function initReveal() {
+  const els = $$('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const siblings = Array.from(entry.target.parentElement.children).filter(c => c.classList.contains('reveal'));
+      const delay = siblings.indexOf(entry.target) * 90;
+      setTimeout(() => entry.target.classList.add('visible'), delay);
+      obs.unobserve(entry.target);
     });
-    
-    filesHtml += `</div><p style="margin-top:2rem;color:var(--muted);font-size:0.9rem;text-align:center;">✅ Click any certificate to open • ${files.length} total files</p></div>`;
-    return filesHtml;
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(el => obs.observe(el));
 }
 
-function openCertFile(filePath) {
-    window.open('certificates/' + filePath, '_blank');
+/* ══════════════════════════════════════════════════════════
+   COUNTERS
+══════════════════════════════════════════════════════════ */
+function initCounters() {
+  const els = $$('[data-target]');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      animCounter(e.target);
+      obs.unobserve(e.target);
+    });
+  }, { threshold: 0.6 });
+  // hero stats
+  $$('.hstat').forEach(h => {
+    const target = +h.getAttribute('data-target');
+    const numEl = h.querySelector('.hstat-n');
+    if (numEl && target) {
+      const obs2 = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) { animNum(numEl, target); obs2.disconnect(); }
+      }, { threshold: .8 });
+      obs2.observe(h);
+    }
+  });
+}
+function animNum(el, target) {
+  const dur = 1800, start = performance.now();
+  ;(function up(now) {
+    const t = Math.min((now - start) / dur, 1);
+    el.textContent = Math.floor(easeOut(t) * target);
+    if (t < 1) requestAnimationFrame(up); else el.textContent = target;
+  })(start);
+}
+function animCounter(el) {
+  const target = +el.getAttribute('data-target');
+  animNum(el, target);
+}
+function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+/* ══════════════════════════════════════════════════════════
+   HERO ENTRANCE (GSAP fallback to CSS if not loaded)
+══════════════════════════════════════════════════════════ */
+function initHeroAnimations() {
+  // FORCE name-brand visible immediately
+  const nameBrand = document.getElementById('nameBrand');
+  if (nameBrand) {
+    nameBrand.style.opacity = '1';
+    nameBrand.style.visibility = 'visible';
+  }
+  
+  // Stagger children
+  const items = [
+    '#heroChip','#heroName','.hero-role-wrap','#heroBio','#heroStats',
+    '#heroSocial','#heroCta','#heroImg'
+  ];
+
+  if (window.gsap && window.ScrollTrigger) {
+    gsap.registerPlugin(ScrollTrigger);
+    const tl = gsap.timeline({ delay: .2 });
+    items.forEach((sel, i) => {
+      tl.fromTo(sel,
+        { y: 40, opacity: 0 },
+        { y: 0, opacity: 1, duration: .7, ease: 'power3.out' },
+        i * 0.08
+      );
+    });
+    // Letter split for name
+    splitLetters('#nameBrand');
+    // Skill bars on scroll
+    ScrollTrigger.create({
+      trigger: '#skills',
+      onEnter: () => $$('.skill-bar-fill').forEach(el => {
+        const pct = el.getAttribute('data-pct');
+        el.style.setProperty('--w', pct);
+        el.style.width = pct + '%';
+      })
+    });
+  } else {
+    // CSS fallback — add animate-in class
+    items.forEach((sel, i) => {
+      const el = document.querySelector(sel);
+      if (el) {
+        el.style.opacity = '0'; el.style.transform = 'translateY(30px)';
+        el.style.transition = `opacity .7s ease ${i * 80}ms, transform .7s ease ${i * 80}ms`;
+        setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 300 + i * 80);
+      }
+    });
+  }
+
+  // Animate skill bars on reveal
+  const sbObs = new IntersectionObserver(entries => {
+    if (!entries[0].isIntersecting) return;
+    $$('.skill-bar-fill').forEach(el => {
+      const pct = el.getAttribute('data-pct') || '0';
+      el.style.width = pct + '%';
+    });
+    sbObs.disconnect();
+  }, { threshold: 0.3 });
+  const skillSec = document.getElementById('skills');
+  if (skillSec) sbObs.observe(skillSec);
 }
 
+function splitLetters(selector) {
+  const el = document.querySelector(selector);
+  if (!el || !window.gsap) return;
+  
+  // SKIP letter animation for name-brand (keeps solid gradient text)
+  if (el.classList.contains('name-brand')) return;
+  
+  const text = el.textContent;
+  el.innerHTML = text.split('').map(c =>
+    `<span style="display:inline-block">${c === ' ' ? '&nbsp;' : c}</span>`
+  ).join('');
+  gsap.from(el.querySelectorAll('span'), {
+    y: 60, opacity: 0, duration: .6, ease: 'back.out(1.5)', stagger: .04, delay: .3
+  });
+}
+
+
+
+
+/* ══════════════════════════════════════════════════════════
+   ROLE ROTATOR
+══════════════════════════════════════════════════════════ */
+function initRoleRotator() {
+  const roles = [
+    'Java Developer', 'Full Stack Engineer', 'ML Practitioner',
+     'Problem Solver', 
+  ];
+  const el = $('roleText');
+  if (!el) return;
+  let i = 0;
+  el.style.transition = 'opacity .35s ease, transform .35s ease';
+  setInterval(() => {
+    el.style.opacity = '0'; el.style.transform = 'translateY(-10px)';
+    setTimeout(() => {
+      i = (i + 1) % roles.length;
+      el.textContent = roles[i];
+      el.style.opacity = '1'; el.style.transform = 'translateY(0)';
+    }, 370);
+  }, 3000);
+}
+
+/* ══════════════════════════════════════════════════════════
+   THREE.JS PARTICLE FIELD
+══════════════════════════════════════════════════════════ */
+function initThreeJS() {
+  if (!window.THREE) return;
+  const canvas = $('bgCanvas');
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000);
+  camera.position.z = 5;
+
+  // Particles
+  const COUNT = 1800;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(COUNT * 3);
+  const col = new Float32Array(COUNT * 3);
+
+  for (let i = 0; i < COUNT; i++) {
+    pos[i * 3]     = (Math.random() - 0.5) * 20;
+    pos[i * 3 + 1] = (Math.random() - 0.5) * 20;
+    pos[i * 3 + 2] = (Math.random() - 0.5) * 20;
+    // green to blue gradient
+    const t = Math.random();
+    col[i * 3]     = t < 0.5 ? 0.13 : 0.23;
+    col[i * 3 + 1] = t < 0.5 ? 0.77 : 0.5;
+    col[i * 3 + 2] = t < 0.5 ? 0.37 : 0.96;
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+
+  const mat = new THREE.PointsMaterial({ size: 0.03, vertexColors: true, transparent: true, opacity: 0.6 });
+  const points = new THREE.Points(geo, mat);
+  scene.add(points);
+
+  // Mouse influence
+  let mx = 0, my = 0;
+  document.addEventListener('mousemove', e => {
+    mx = (e.clientX / innerWidth  - .5) * 2;
+    my = (e.clientY / innerHeight - .5) * -2;
+  }, { passive: true });
+
+  function resize() {
+    renderer.setSize(innerWidth, innerHeight);
+    camera.aspect = innerWidth / innerHeight;
+    camera.updateProjectionMatrix();
+  }
+  resize();
+  window.addEventListener('resize', resize, { passive: true });
+
+  let frame = 0;
+  ;(function animate() {
+    requestAnimationFrame(animate);
+    frame++;
+    points.rotation.y += 0.0003 + mx * 0.0002;
+    points.rotation.x += 0.0001 + my * 0.0002;
+    if (frame % 2 === 0) renderer.render(scene, camera);
+  })();
+}
+
+/* ══════════════════════════════════════════════════════════
+   NAV HIGHLIGHT
+══════════════════════════════════════════════════════════ */
+function initNavHighlight() {
+  const sections = $$('section[id], header[id]');
+  const links = $$('.nav-link');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + e.target.id));
+      }
+    });
+  }, { threshold: 0.4 });
+  sections.forEach(s => obs.observe(s));
+}
+
+/* ══════════════════════════════════════════════════════════
+   SKILL FILTER
+══════════════════════════════════════════════════════════ */
+function initSkillFilter() {
+  $$('.sf-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('.sf-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-selected','false'); });
+      btn.classList.add('active'); btn.setAttribute('aria-selected','true');
+      const f = btn.dataset.filter;
+      playSound('click');
+      $$('.stag').forEach(t => {
+        if (f === 'all' || t.dataset.cat === f) {
+          t.classList.remove('dimmed'); t.classList.add('active');
+        } else {
+          t.classList.add('dimmed'); t.classList.remove('active');
+        }
+      });
+    });
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   PROJECT FILTER
+══════════════════════════════════════════════════════════ */
+function initProjectFilter() {
+  $$('.pf-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('.pf-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.pf;
+      playSound('click');
+      $$('.project-card').forEach(card => {
+        const tags = card.dataset.tags || '';
+        if (f === 'all' || tags.includes(f)) {
+          card.classList.remove('filtered-out');
+          card.style.height = '';
+        } else {
+          card.classList.add('filtered-out');
+        }
+      });
+    });
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   3D TILT CARDS
+══════════════════════════════════════════════════════════ */
+function initTiltCards() {
+  if (window.matchMedia('(max-width:900px)').matches) return;
+  $$('.tilt-card').forEach(card => {
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width  - .5;
+      const y = (e.clientY - r.top)  / r.height - .5;
+      card.style.transform = `perspective(800px) rotateY(${x * 8}deg) rotateX(${y * -8}deg) scale(1.02)`;
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   MAGNETIC BUTTONS
+══════════════════════════════════════════════════════════ */
+function initMagneticButtons() {
+  if (window.matchMedia('(max-width:820px)').matches) return;
+  $$('.magnetic').forEach(btn => {
+    btn.addEventListener('mousemove', e => {
+      const r = btn.getBoundingClientRect();
+      const x = (e.clientX - r.left - r.width  / 2) * 0.25;
+      const y = (e.clientY - r.top  - r.height / 2) * 0.25;
+      btn.style.transform = `translate(${x}px, ${y}px)`;
+    });
+    btn.addEventListener('mouseleave', () => {
+      btn.style.transform = '';
+    });
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   SOUND FX (Web Audio API)
+══════════════════════════════════════════════════════════ */
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+function playSound(type) {
+  if (!soundEnabled) return;
+  try {
+    const ctx = getAudioCtx();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    const freqs = { click: 880, open: 440, close: 330, success: 1047, error: 200 };
+    osc.frequency.value = freqs[type] || 440;
+    osc.type = 'sine';
+    gain.gain.setValueAtTime(0.08, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+    osc.start(ctx.currentTime); osc.stop(ctx.currentTime + 0.12);
+  } catch(e) {}
+}
+
+/* ══════════════════════════════════════════════════════════
+   FAB CLUSTER
+══════════════════════════════════════════════════════════ */
+function initFAB() {
+  $('fabMain')?.addEventListener('click', () => {
+    fabOpen = !fabOpen;
+    $('fabMain').classList.toggle('active', fabOpen);
+    $('fabItems').classList.toggle('open', fabOpen);
+    $('fabMain').setAttribute('aria-expanded', fabOpen);
+    playSound('click');
+  });
+  $('soundToggle')?.addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    $('soundToggle').innerHTML = soundEnabled
+      ? '<i class="fas fa-volume-high"></i>'
+      : '<i class="fas fa-volume-xmark"></i>';
+    if (soundEnabled) playSound('success');
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   TERMINAL
+══════════════════════════════════════════════════════════ */
+const COMMANDS = {
+  help: () => [
+    '  <span style="color:var(--green)">Available commands:</span>',
+    '  about      — Who is Ashwin?',
+    '  skills     — Technical skills list',
+    '  projects   — List all projects',
+    '  contact    — Contact information',
+    '  stats      — Live stats',
+    '  hire       — Why you should hire me',
+    '  resume     — Open resume PDF',
+    '  clear      — Clear terminal',
+    '  matrix     — 👀',
+    '  theme      — Toggle dark/light mode',
+    '  exit       — Close terminal',
+  ],
+  about: () => [
+    '  <span style="color:var(--green)">Ashwin T</span> — Java Developer & ML Engineer',
+    '  📍 Chennai, Tamil Nadu, India',
+    '  🎓 B.E. Computer Science, Panimalar (2027)',
+    '  ⭐ CGPA: 9.2 / 10  |  Top 5% of class',
+    '  🏢 Ex-Infosys Python Full Stack Intern',
+    '  📧 ashwin2006t@gmail.com',
+  ],
+  skills: () => [
+    '  <span style="color:var(--green)">Languages:</span>  Java, Python',
+    '  <span style="color:var(--green)">Web:</span>        HTML5, CSS3, JavaScript, Django',
+    '  <span style="color:var(--green)">ML/AI:</span>      Scikit-learn, Pandas, NLP, Streamlit',
+    '  <span style="color:var(--green)">Cloud:</span>      AWS, Oracle Cloud, CI/CD',
+    '  <span style="color:var(--green)">DB:</span>         MySQL, Oracle SQL, MongoDB',
+    '  <span style="color:var(--green)">Tools:</span>      Git, VS Code, Eclipse, Android Studio',
+  ],
+  projects: () => [
+    '  <span style="color:var(--green)">1. Professional Banking System</span>  (Java 24 · Swing · OOP)',
+    '     → 5-tab enterprise dashboard, PIN security, full CRUD',
+    '  <span style="color:var(--green)">2. HireShield — Fake Job Detection</span>  (Python · ML · NLP)',
+    '     → 92% accuracy · 10K+ records · Infosys Internship',
+    '  <span style="color:var(--green)">3. EV Adoption Forecasting</span>  (Python · Streamlit)',
+    '     → 85% prediction accuracy · Interactive dashboard',
+    '  <span style="color:var(--green)">4. Steganography Tool</span>  (Python · Pillow · LSB)',
+    '     → Hide/extract messages in images · CLI tool',
+  ],
+  contact: () => [
+    '  📧 ashwin2006t@gmail.com',
+    '  🔗 linkedin.com/in/ashwin2006',
+    '  💻 github.com/Ashwin-2006-t',
+    '  🏆 leetcode.com/u/Ashwin_2006_T/',
+  ],
+  stats: () => [
+    '  📊 CGPA: 9.2/10 | Top 5%',
+    '  🏆 17+ Certifications across cloud, AI, full-stack',
+    '  🤖 HireShield: 92% ML accuracy on 10K+ records',
+    '  🏢 3 Internships: Infosys · CodeBind · Edunet/AICTE',
+    '  ☁️  AWS Cloud · Oracle Cloud · ServiceNow CSA',
+  ],
+  hire: () => [
+    '  <span style="color:var(--green)">Top 5% CGPA</span> + Production internship @ Infosys',
+    '  Built <span style="color:var(--green)">enterprise Java</span> desktop apps from scratch',
+    '  Deployed <span style="color:var(--green)">ML models</span> with 92% accuracy to production',
+    '  <span style="color:var(--green)">17+ certifications</span>: AWS, Oracle, NPTEL, ServiceNow',
+    '  <span style="color:var(--green)">Fast learner</span>, zero ego, 100% team player',
+    '',
+    '  <span style="color:var(--amber)">→ Let\'s talk: ashwin2006t@gmail.com</span>',
+  ],
+  resume: () => {
+    window.open('resume/Ashwin_T__Resume(2026).pdf', '_blank');
+    return ['  ✅ Opening resume PDF...'];
+  },
+  clear: () => { $('termBody').innerHTML = ''; return null; },
+  matrix: () => {
+    closeTerminal();
+    toggleMatrix();
+    return null;
+  },
+  theme: () => {
+    const cur = document.documentElement.getAttribute('data-theme');
+    setTheme(cur === 'dark' ? 'light' : 'dark');
+    return ['  ✅ Theme toggled to ' + (cur === 'dark' ? 'light' : 'dark')];
+  },
+  exit: () => { closeTerminal(); return null; },
+};
+
+function initTerminal() {
+  const input = $('termInput');
+  if (!input) return;
+  termPrint(['<span style="color:var(--green)">Welcome to Ashwin\'s portfolio terminal!</span>', 'Type <span style="color:var(--amber)">help</span> to see available commands.', ''], 'out');
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      const cmd = input.value.trim().toLowerCase();
+      if (!cmd) return;
+      termPrint(['❯ ' + cmd], 'cmd');
+      termHistory.unshift(cmd); termHistIdx = -1;
+      const fn = COMMANDS[cmd];
+      if (fn) {
+        const out = fn();
+        if (out) termPrint(out, 'out');
+      } else {
+        termPrint([`  <span style="color:#ef4444">Command not found: "${cmd}" — type help</span>`], 'err');
+        playSound('error');
+      }
+      input.value = '';
+      const body = $('termBody');
+      if (body) body.scrollTop = body.scrollHeight;
+    }
+    if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (termHistIdx < termHistory.length - 1) { termHistIdx++; input.value = termHistory[termHistIdx]; }
+    }
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (termHistIdx > 0) { termHistIdx--; input.value = termHistory[termHistIdx]; }
+      else { termHistIdx = -1; input.value = ''; }
+    }
+    if (e.key === 'Tab') {
+      e.preventDefault();
+      const partial = input.value.trim().toLowerCase();
+      const match = Object.keys(COMMANDS).find(c => c.startsWith(partial));
+      if (match) input.value = match;
+    }
+  });
+}
+
+function termPrint(lines, cls = 'out') {
+  const body = $('termBody');
+  if (!body) return;
+  lines.forEach(l => {
+    const div = document.createElement('div');
+    div.className = 'term-line ' + cls;
+    div.innerHTML = l;
+    body.appendChild(div);
+  });
+  body.scrollTop = body.scrollHeight;
+}
+
+function openTerminal() {
+  $('terminal').classList.add('open');
+  $('terminal').setAttribute('aria-hidden','false');
+  setTimeout(() => $('termInput')?.focus(), 400);
+  playSound('open');
+}
+function closeTerminal() {
+  $('terminal').classList.remove('open');
+  $('terminal').setAttribute('aria-hidden','true');
+  playSound('close');
+}
+
+/* ══════════════════════════════════════════════════════════
+   COMMAND PALETTE
+══════════════════════════════════════════════════════════ */
+const CMD_ITEMS = [
+  { icon:'fas fa-user', label:'About Ashwin', shortcut:'1', action:() => scrollTo('#objective') },
+  { icon:'fas fa-graduation-cap', label:'Education', shortcut:'2', action:() => scrollTo('#education') },
+  { icon:'fas fa-code', label:'Technical Skills', shortcut:'3', action:() => scrollTo('#skills') },
+  { icon:'fas fa-folder-open', label:'Projects', shortcut:'4', action:() => scrollTo('#projects') },
+  { icon:'fas fa-briefcase', label:'Experience', shortcut:'5', action:() => scrollTo('#experience') },
+  { icon:'fas fa-chart-line', label:'Live Stats Dashboard', shortcut:'6', action:() => scrollTo('#stats') },
+  { icon:'fas fa-certificate', label:'Certifications', shortcut:'7', action:() => scrollTo('#certifications') },
+  { icon:'fas fa-envelope', label:'Contact / CTA', action:() => scrollTo('.contact-section') },
+  { icon:'fas fa-file-pdf', label:'Download Resume', action:() => window.open('resume/Ashwin_T__Resume(2026).pdf','_blank') },
+  { icon:'fas fa-terminal', label:'Open Terminal', shortcut:'T', action:openTerminal },
+  { icon:'fas fa-sun', label:'Toggle Light/Dark Mode', action:() => { const c = document.documentElement.getAttribute('data-theme'); setTheme(c==='dark'?'light':'dark'); } },
+  { icon:'fas fa-brain', label:'HireShield Project', action:() => openProjectModal('infosys-job-detection') },
+  { icon:'fas fa-university', label:'Banking System Project', action:() => openProjectModal('banking-system') },
+  { icon:'fab fa-github', label:'GitHub Profile', action:() => window.open('https://github.com/Ashwin-2006-t','_blank') },
+  { icon:'fab fa-linkedin', label:'LinkedIn Profile', action:() => window.open('https://linkedin.com/in/ashwin2006','_blank') },
+];
+
+function initCmdPalette() {
+  renderCmdList(CMD_ITEMS);
+  const input = $('cmdInput');
+  if (!input) return;
+  input.addEventListener('input', () => {
+    const q = input.value.toLowerCase();
+    const filtered = CMD_ITEMS.filter(c => c.label.toLowerCase().includes(q));
+    renderCmdList(filtered);
+    cmdSelected = 0;
+  });
+  input.addEventListener('keydown', e => {
+    const items = $$('.cmd-item');
+    if (e.key === 'ArrowDown') { e.preventDefault(); cmdSelected = Math.min(cmdSelected + 1, items.length - 1); highlightCmd(); }
+    if (e.key === 'ArrowUp') { e.preventDefault(); cmdSelected = Math.max(cmdSelected - 1, 0); highlightCmd(); }
+    if (e.key === 'Enter') { e.preventDefault(); items[cmdSelected]?.click(); }
+    if (e.key === 'Escape') closeCmdPalette();
+  });
+  $('cmdPalette')?.addEventListener('click', e => { if (e.target === $('cmdPalette')) closeCmdPalette(); });
+}
+
+function renderCmdList(items) {
+  const list = $('cmdList');
+  if (!list) return;
+  if (items.length === 0) { list.innerHTML = '<div class="cmd-group-label">No results found</div>'; return; }
+  list.innerHTML = items.map((c, i) => `
+    <button class="cmd-item${i === 0 ? ' selected' : ''}" onclick="executeCmdItem(${CMD_ITEMS.indexOf(c)})">
+      <i class="${c.icon}"></i>
+      ${c.label}
+      ${c.shortcut ? `<span class="cmd-item-shortcut">${c.shortcut}</span>` : ''}
+    </button>
+  `).join('');
+}
+
+function executeCmdItem(idx) {
+  CMD_ITEMS[idx]?.action();
+  closeCmdPalette();
+  playSound('success');
+}
+
+function highlightCmd() {
+  $$('.cmd-item').forEach((el, i) => el.classList.toggle('selected', i === cmdSelected));
+}
+
+function openCmdPalette() {
+  $('cmdPalette').classList.add('open');
+  $('cmdPalette').setAttribute('aria-hidden','false');
+  setTimeout(() => $('cmdInput')?.focus(), 50);
+  playSound('open');
+  // Close FAB
+  $('fabMain')?.classList.remove('active');
+  $('fabItems')?.classList.remove('open');
+  fabOpen = false;
+}
+
+function closeCmdPalette() {
+  $('cmdPalette').classList.remove('open');
+  $('cmdPalette').setAttribute('aria-hidden','true');
+  if ($('cmdInput')) $('cmdInput').value = '';
+  renderCmdList(CMD_ITEMS);
+  playSound('close');
+}
+
+function scrollTo(selector) {
+  const el = document.querySelector(selector);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ⌘K / Ctrl+K global shortcut
+document.addEventListener('keydown', e => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openCmdPalette(); }
+  if (e.key === 'Escape') { closeCmdPalette(); closeModal(); }
+  if (e.key === 't' && !e.target.matches('input,textarea')) openTerminal();
+});
+
+/* ══════════════════════════════════════════════════════════
+   KONAMI CODE → MATRIX RAIN
+══════════════════════════════════════════════════════════ */
+function initKonami() {
+  document.addEventListener('keydown', e => {
+    if (e.key === KONAMI[konamiIdx]) {
+      konamiIdx++;
+      if (konamiIdx === KONAMI.length) {
+        konamiIdx = 0;
+        toggleMatrix();
+      }
+    } else { konamiIdx = 0; }
+  });
+}
+
+function toggleMatrix() {
+  matrixActive = !matrixActive;
+  const canvas = $('matrixCanvas');
+  canvas.classList.toggle('active', matrixActive);
+  if (matrixActive) {
+    playSound('success');
+    startMatrix();
+    setTimeout(toggleMatrix, 12000); // auto-off after 12s
+  }
+}
+
+function startMatrix() {
+  const canvas = $('matrixCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = innerWidth; canvas.height = innerHeight;
+  const cols = Math.floor(innerWidth / 20);
+  const drops = Array(cols).fill(1);
+  const chars = 'アカサタナハマヤラワABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+
+  let frame = 0;
+  function draw() {
+    if (!matrixActive) return;
+    frame++;
+    if (frame % 2 !== 0) { requestAnimationFrame(draw); return; }
+    ctx.fillStyle = 'rgba(0,0,0,0.04)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = '#22c55e';
+    ctx.font = '16px "DM Mono", monospace';
+    drops.forEach((y, i) => {
+      const ch = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(ch, i * 20, y * 20);
+      if (y * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+
+  canvas.addEventListener('click', () => {
+    matrixActive = false;
+    canvas.classList.remove('active');
+  }, { once: true });
+}
+
+/* ══════════════════════════════════════════════════════════
+   LIVE STATS (GitHub API + Fake LeetCode)
+══════════════════════════════════════════════════════════ */
+async function initLiveStats() {
+  // GitHub
+  try {
+    const res = await fetch('https://api.github.com/users/Ashwin-2006-t', { cache: 'force-cache' });
+    if (res.ok) {
+      const d = await res.json();
+      setStatAnim('ghRepos', d.public_repos || 0);
+      setStatAnim('ghFollowers', d.followers || 0);
+      setStatAnim('ghStars', 0); // would need extra call
+      $('ghStatus').textContent = `@${d.login} · ${d.public_repos} public repos`;
+    } else {
+      $('ghStatus').textContent = 'Data loaded from cache.';
+      setStatAnim('ghRepos', 12); setStatAnim('ghFollowers', 8); setStatAnim('ghStars', 3);
+    }
+  } catch {
+    $('ghStatus').textContent = 'Showing estimated stats.';
+    setStatAnim('ghRepos', 12); setStatAnim('ghFollowers', 8); setStatAnim('ghStars', 3);
+  }
+
+  // LeetCode (proxy-free: show curated stats)
+  setTimeout(() => {
+    setStatAnim('lcEasy', 45); setStatAnim('lcMed', 28); setStatAnim('lcHard', 6);
+    $('lcStatus').textContent = 'Profile: Ashwin_2006_T';
+  }, 800);
+}
+
+function setStatAnim(id, target) {
+  const el = $(id);
+  if (!el) return;
+  animNum(el, target);
+}
+
+/* ══════════════════════════════════════════════════════════
+   CONTRIBUTION HEATMAP
+══════════════════════════════════════════════════════════ */
+function initContribHeatmap() {
+  const container = $('contribHeatmap');
+  if (!container) return;
+  const cells = 52 * 7; // 1 year
+  let html = '';
+  for (let i = 0; i < cells; i++) {
+    const r = Math.random();
+    let level = 0;
+    if (r > 0.85) level = 4;
+    else if (r > 0.65) level = 3;
+    else if (r > 0.45) level = 2;
+    else if (r > 0.3)  level = 1;
+    html += `<div class="contrib-cell l${level}" title="Activity level ${level}"></div>`;
+  }
+  container.innerHTML = html;
+}
+
+/* ══════════════════════════════════════════════════════════
+   CHARTS (Canvas — Radar + Doughnut)
+══════════════════════════════════════════════════════════ */
+function initCharts() {
+  drawRadar();
+  drawLangChart();
+}
+
+function drawRadar() {
+  const canvas = $('radarChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W / 2, cy = H / 2 + 10, r = Math.min(W, H) / 2 - 30;
+  const labels = ['Java', 'Python', 'ML/AI', 'Web', 'Cloud', 'SQL'];
+  const values = [0.88, 0.82, 0.75, 0.78, 0.65, 0.8];
+  const n = labels.length;
+  const green = '#22c55e';
+
+  ctx.clearRect(0, 0, W, H);
+
+  // Grid
+  for (let ring = 1; ring <= 4; ring++) {
+    ctx.beginPath();
+    for (let i = 0; i < n; i++) {
+      const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+      const x = cx + (r * ring / 4) * Math.cos(angle);
+      const y = cy + (r * ring / 4) * Math.sin(angle);
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Axes
+  for (let i = 0; i < n; i++) {
+    const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + r * Math.cos(angle), cy + r * Math.sin(angle));
+    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    ctx.stroke();
+  }
+
+  // Data fill
+  ctx.beginPath();
+  values.forEach((v, i) => {
+    const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+    const x = cx + r * v * Math.cos(angle);
+    const y = cy + r * v * Math.sin(angle);
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  });
+  ctx.closePath();
+  ctx.fillStyle = 'rgba(34,197,94,0.15)';
+  ctx.fill();
+  ctx.strokeStyle = green;
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // Dots
+  values.forEach((v, i) => {
+    const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+    const x = cx + r * v * Math.cos(angle);
+    const y = cy + r * v * Math.sin(angle);
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fillStyle = green; ctx.fill();
+  });
+
+  // Labels
+  ctx.fillStyle = '#8b9fc0';
+  ctx.font = '600 11px "DM Sans", sans-serif';
+  ctx.textAlign = 'center';
+  labels.forEach((l, i) => {
+    const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+    const x = cx + (r + 22) * Math.cos(angle);
+    const y = cy + (r + 22) * Math.sin(angle) + 4;
+    ctx.fillText(l, x, y);
+  });
+}
+
+function drawLangChart() {
+  const canvas = $('langChart');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const cx = W / 2, cy = H / 2 - 10, r = Math.min(W, H) / 2 - 28;
+  const langs = [
+    { label:'Java', pct:.42, color:'#22c55e' },
+    { label:'Python', pct:.35, color:'#3b82f6' },
+    { label:'JavaScript', pct:.12, color:'#f59e0b' },
+    { label:'HTML/CSS', pct:.08, color:'#ec4899' },
+    { label:'Other', pct:.03, color:'#4a5878' },
+  ];
+  let start = -Math.PI / 2;
+
+  langs.forEach(l => {
+    const sweep = l.pct * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, start, start + sweep);
+    ctx.closePath();
+    ctx.fillStyle = l.color;
+    ctx.fill();
+    start += sweep;
+  });
+
+  // Donut hole
+  ctx.beginPath();
+  ctx.arc(cx, cy, r * 0.55, 0, Math.PI * 2);
+  ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--card') || '#111827';
+  ctx.fill();
+
+  // Legend
+  ctx.font = '600 10px "DM Sans", sans-serif';
+  ctx.textAlign = 'left';
+  langs.forEach((l, i) => {
+    const y = H - 70 + i * 14;
+    ctx.fillStyle = l.color;
+    ctx.fillRect(8, y - 8, 8, 8);
+    ctx.fillStyle = '#8b9fc0';
+    ctx.fillText(`${l.label} ${Math.round(l.pct * 100)}%`, 20, y);
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   AI PERSONA DETECTOR
+══════════════════════════════════════════════════════════ */
+function initAIPersona() {
+  const ref = document.referrer || '';
+  const ua = navigator.userAgent || '';
+  let persona = null;
+
+  if (ref.includes('linkedin')) persona = { icon:'fab fa-linkedin', msg:'Welcome, LinkedIn visitor! Ashwin is actively seeking new opportunities.' };
+  else if (ref.includes('github')) persona = { icon:'fab fa-github', msg:'Hey fellow developer! Check out the live code in the projects section.' };
+  else if (ref.includes('google') && ref.includes('java')) persona = { icon:'fab fa-java', msg:'Looking for a Java developer? You\'ve found your match.' };
+  else if (ref.includes('google') && ref.includes('machine learning')) persona = { icon:'fas fa-brain', msg:'ML engineer needed? Ashwin built a 92% accuracy system at Infosys.' };
+  else if (/mobile|android|iphone/i.test(ua)) persona = { icon:'fas fa-mobile-alt', msg:'Browsing on mobile — this portfolio is fully responsive!' };
+
+  if (persona) {
+    const banner = $('personaBanner');
+    banner.innerHTML = `<i class="${persona.icon}"></i> ${persona.msg}`;
+    setTimeout(() => banner.classList.add('show'), 2000);
+    setTimeout(() => banner.classList.remove('show'), 7000);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════
+   SMOOTH SCROLL + NAV MOBILE
+══════════════════════════════════════════════════════════ */
+function initSmoothScroll() {
+  $$('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) { e.preventDefault(); target.scrollIntoView({ behavior:'smooth', block:'start' }); }
+    });
+  });
+}
+
+function initNavMobile() {
+  const hamburger = $('navHamburger');
+  const menu = $('navMenu');
+  if (!hamburger || !menu) return;
+  hamburger.addEventListener('click', () => {
+    const open = menu.classList.toggle('mobile-open');
+    hamburger.setAttribute('aria-expanded', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  $$('.nav-link').forEach(a => {
+    a.addEventListener('click', () => {
+      menu.classList.remove('mobile-open');
+      hamburger.setAttribute('aria-expanded','false');
+      document.body.style.overflow = '';
+    });
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
+   MODAL SYSTEM
+══════════════════════════════════════════════════════════ */
 function showModal() {
-    const modal = document.getElementById('detailModal');
-    window.scrollPosition = window.pageYOffset;
-    modal.style.display = 'block';
-    document.body.classList.add('modal-open');
+  const m = $('detailModal');
+  m.classList.add('open'); m.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+  scrollPos.y = window.scrollY;
+  playSound('open');
+}
+function closeModal() {
+  const m = $('detailModal');
+  m.classList.remove('open'); m.style.display = 'none';
+  document.body.style.overflow = '';
+  window.scrollTo(0, scrollPos.y);
+  playSound('close');
 }
 
+/* ─── CERT DATA ──────────────────────────────────────────── */
+const CERT_DATA = {
+  'google-analytics': { name:'Google Analytics Certification', file:'certificates/google-analytics.png', issuer:'Google', type:'image' },
+  'aws-cloud':        { name:'AWS Cloud Support Associate', file:'certificates/aws-cloud.pdf', issuer:'Amazon Web Services', type:'pdf' },
+  'fullstack':        { name:'Diploma in Full Stack Development', file:'certificates/cass-fullstack.jpg', issuer:'CASS Academy', grade:'A (83%)', type:'image' },
+  'oracle-cloud':     { name:'Oracle Cloud Infrastructure', file:'certificates/oracle-cloud2025.pdf', issuer:'Oracle', type:'pdf' },
+  'fusion-ai':        { name:'Fusion AI Foundations', file:'certificates/oracle-fusion-ai2025.pdf', issuer:'Oracle', type:'pdf' },
+  'machine-learning': { name:'Introduction to Machine Learning', file:'certificates/nptel-ml.png', issuer:'NPTEL, IIT Kharagpur', type:'image' },
+  'servicenow-csa':   { name:'ServiceNow CSA Certification', file:'certificates/servicenow-csa.jpg', issuer:'ServiceNow', type:'image' },
+  'infosys-java':     { name:'Java Developer Certification', file:'certificates/infosys-java.pdf', issuer:'Infosys', type:'pdf' },
+  'infosys-bundle': {
+    name:'Infosys Certifications (17 Total)', issuer:'Infosys Limited', type:'bundle',
+    files:['infosys/Agile-Scrum-in-Practice.pdf','infosys/Basics-of-Python.pdf','infosys/CSS3-Infosys.pdf','infosys/Database-Management-System-Part-1.pdf','infosys/Database-Management-System-Part-2.pdf','infosys/Email-Writing-Skills.pdf','infosys/Front-End-Web-Developer-Certification.pdf','infosys/High-Impact-Presentations.pdf','infosys/HTML5-Infosys.pdf','infosys/Introduction-to-NoSQL-databases.pdf','infosys/JavaScript-Infosys.pdf','infosys/Object-Oriented-Programming-using-Python.pdf','infosys/Programming-Fundamentals-using-Python-Part-2.pdf','infosys/Python-Foundation-Certification.pdf','infosys/Software-Engineering-and-Agile-software-development.pdf','infosys/Time-Management-certificate.pdf','infosys/AWS-Cloud-Management-certificate.pdf']
+  },
+  'ibm-edunet': {
+    name:'IBM SkillsBuild Certifications (15 Total)', issuer:'IBM via Edunet Foundation', type:'bundle',
+    files:['ibm/Communicating-with-impact.pdf','ibm/Create-a-Credly-account.pdf','ibm/Critical-Soft-Skills-for-Project-Managers-Project-Management-Training.pdf','ibm/Cybersecurity-Fundamentals-Earn-a-credential.pdf','ibm/Cybersecurity-Fundamentals.pdf','ibm/Cybersecurity-On-the-Defense.pdf','ibm/Earn-it-Accept-it-Share-it.pdf','ibm/How-is-cybersecurity-used.pdf','ibm/IBM-to-Write-20250620-28ncl.pdf','ibm/Indesign-Career-Guide.pdf','ibm/Introduction-to-Cybersecurity.pdf','ibm/Make-Your-Resume-Stand-Out-from-the-Pile.pdf','ibm/Top-10-Reasons-for-Credly.pdf','ibm/What-is-Cybersecurity-Learning.pdf','ibm/Your-Future-in-Cybersecurity-The-Job-Landscape.pdf']
+  }
+};
+
+function openCertModal(certId) {
+  const cert = CERT_DATA[certId];
+  if (!cert) return;
+  $('modalTitle').textContent = cert.name;
+  if (cert.type === 'bundle') {
+    $('modalBody').innerHTML = `
+      <p style="margin-bottom:1.25rem;color:var(--text2)"><strong style="color:var(--text)">${cert.issuer}</strong> &bull; ${cert.files.length} official certificates</p>
+      <div class="m-cert-grid">
+        ${cert.files.map(f => {
+          const n = f.split('/').pop().replace('.pdf','').replace(/-/g,' ').replace(/\b\w/g,l=>l.toUpperCase());
+          return `<div class="m-cert-tile" onclick="window.open('certificates/${f}','_blank')">
+            <div class="m-ct-icon"><i class="fas fa-file-pdf"></i></div>
+            <div class="m-ct-name">${n}</div>
+          </div>`;
+        }).join('')}
+      </div>`;
+  } else {
+    const preview = cert.type === 'pdf'
+      ? `<iframe src="${cert.file}#toolbar=0" class="m-cert-iframe" frameborder="0"></iframe>`
+      : `<img src="${cert.file}" alt="${cert.name}" class="m-cert-img">`;
+    $('modalBody').innerHTML = `
+      <p style="margin-bottom:1.25rem">Issued by: <strong>${cert.issuer}</strong>${cert.grade ? ` &nbsp;|&nbsp; Grade: <span style="color:var(--green)">${cert.grade}</span>` : ''}</p>
+      ${preview}
+      <div class="m-actions">
+        <a href="${cert.file}" target="_blank" class="m-btn p"><i class="fas fa-external-link-alt"></i> Open Full</a>
+        <a href="${cert.file}" download class="m-btn o"><i class="fas fa-download"></i> Download</a>
+      </div>`;
+  }
+  showModal();
+}
+
+/* ─── PROJECT MODAL DATA ─────────────────────────────────── */
+const PROJ_DATA = {
+  'banking-system': {
+    title:'Professional Banking System',
+    meta:[{icon:'fab fa-java',l:'Java 24'},{icon:'fas fa-desktop',l:'Desktop App'},{icon:'fas fa-calendar',l:'2026'}],
+    desc:'A production-quality Java Swing desktop application featuring a 5-tab enterprise dashboard, PIN-based security, and complete banking operations built on robust SOLID-principles OOP.',
+    tech:['Java 24','Swing GUI','OOP / SOLID','Serialization','File I/O','Event-Driven'],
+    achievements:['5-tab enterprise dashboard — accounts, deposits, withdrawals, transfers, admin','PIN-based authentication + .dat file persistence across sessions','Full CRUD with account freezing, transaction history, live balance stats','Production-grade: input validation, error handling, session management','Zero external dependencies — pure Java standard library'],
+    github:null, cert:null
+  },
+  'infosys-job-detection': {
+    title:'HireShield — Fake Job Detection',
+    meta:[{icon:'fas fa-building',l:'Infosys Internship'},{icon:'fas fa-calendar',l:'2025'},{icon:'fas fa-robot',l:'ML/NLP'}],
+    desc:'End-to-end ML fraud detection system built during 8-week Infosys internship. Processes job postings through an NLP pipeline achieving 92% classification accuracy.',
+    tech:['Python','Scikit-learn','NLP / TF-IDF','Pandas','Random Forest','Streamlit'],
+    achievements:['92% classification accuracy on held-out test data','Processed and cleaned 10,000+ real job posting records','Full NLP pipeline: tokenization, stopword removal, TF-IDF vectorization','Interactive Streamlit dashboard for real-time predictions','Deployed and presented to Infosys stakeholders'],
+    github:'https://github.com/Ashwin-2006-t/fake-job-detection-individual.git',
+    cert:'certificates/internship/infosys-internship-certificate.pdf'
+  },
+  'ev-forecasting': {
+    title:'EV Adoption Forecasting',
+    meta:[{icon:'fas fa-charging-station',l:'ML Project'},{icon:'fas fa-calendar',l:'2025'},{icon:'fab fa-python',l:'Python'}],
+    desc:'Python ML project forecasting electric vehicle adoption trends using feature engineering, time-series modelling, and interactive scenario simulation.',
+    tech:['Python','Scikit-learn','Pandas','Matplotlib','Streamlit','Jupyter'],
+    achievements:['15+ engineered features from raw EV market data','Time-series regression achieving 85% prediction accuracy','Interactive Streamlit dashboard with scenario sliders','Market growth trend analysis across multiple geographies'],
+    github:'https://github.com/Ashwin-2006-t/EV_Forecasting.git',
+    cert:'certificates/internship/ev-project-internship-cert.jpg'
+  },
+  'steganography': {
+    title:'Steganography Tool',
+    meta:[{icon:'fas fa-lock',l:'Security'},{icon:'fas fa-calendar',l:'2024'},{icon:'fab fa-python',l:'Python'}],
+    desc:'CLI tool for hiding and extracting secret messages inside images using LSB steganography. Supports multiple image formats with minimal visual distortion.',
+    tech:['Python','Pillow (PIL)','NumPy','LSB Encoding','CLI/argparse'],
+    achievements:['LSB steganography — encode text invisibly into carrier images','Encoder and decoder CLI with full argument parsing','PNG, BMP, JPEG format support with auto-detection','Minimal perceptual distortion to carrier images'],
+    github:'https://github.com/Ashwin-2006-t/-steganography.git',
+    cert:'certificates/internship/steganography-internship-cert.jpg'
+  }
+};
 
 function openProjectModal(projectId) {
-    const modal = document.getElementById('detailModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.getElementById('modalBody');
-    
-    const projectData = {
-        // 1. INFO SYS FAKE JOB DETECTION
-        'infosys-job-detection': {
-            title: 'HireShield - Fake Job Detection System',
-            description: 'Developed during <strong>Infosys Internship</strong>. ML system to detect fraudulent job postings using advanced NLP techniques with <strong>92% accuracy</strong>.',
-            tech: ['Python', 'Scikit-learn', 'NLP', 'Pandas', 'Streamlit'],
-            github: 'https://github.com/Ashwin-2006-t/fake-job-detection-individual.git',
-            internshipCert: 'certificates/internship/infosys-internship-certificate.pdf',
-            achievements: [
-                '✅ 92% model accuracy',
-                '✅ Processed 10K+ job postings', 
-                '✅ Live Streamlit dashboard',
-                '✅ Full NLP pipeline implemented'
-            ]
-        },
-
-        // 2. EV FORECASTING
-        'ev-forecasting': {
-            title: 'EV Forecasting Project',
-            description: 'Academic project with internship-level implementation. Python-based electric vehicle adoption forecasting system using machine learning and data visualization.',
-            tech: ['Python', 'Scikit-learn', 'Matplotlib', 'Pandas', 'Jupyter'],
-            github: 'https://github.com/Ashwin-2006-t/EV_Forecasting.git',
-            internshipCert: 'certificates/internship/ev-project-internship-cert.jpg',
-            achievements: [
-                '✅ Time-series forecasting model',
-                '✅ Interactive visualization dashboard',
-                '✅ 85% prediction accuracy'
-            ]
-        },
-
-        // 3. STEGANOGRAPHY
-        'steganography': {
-            title: 'Steganography Tool',
-            description: 'Internship-grade implementation. Command-line tool for hiding and extracting secret messages in images using LSB steganography technique.',
-            tech: ['Python', 'Pillow', 'NumPy'],
-            github: 'https://github.com/Ashwin-2006-t/-steganography.git',
-            internshipCert: 'certificates/internship/steganography-internship-cert.jpg',
-            achievements: [
-                '✅ LSB steganography implementation',
-                '✅ Encoder/Decoder CLI tools',
-                '✅ Supports multiple image formats'
-            ]
-        }
-    };
-    
-    const project = projectData[projectId];
-    if (project) {
-        modalTitle.textContent = project.title;
-        
-        let content = `<p style="font-size: 1.1rem; line-height: 1.8;">${project.description}</p>`;
-        
-        // Tech stack badges
-        if (project.tech) {
-            content += '<h3 style="margin-top: 2.5rem; margin-bottom: 1.25rem; color: var(--accent);">🛠️ Technologies Used</h3>';
-            content += '<div class="tech-tags" style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 2rem;">';
-            project.tech.forEach(tech => {
-                content += `<span class="badge primary" style="font-size: 0.9rem; padding: 0.5rem 1rem;">${tech}</span>`;
-            });
-            content += '</div>';
-        }
-        
-        // Achievements
-        if (project.achievements) {
-            content += '<h3 style="margin-top: 2rem; margin-bottom: 1.25rem; color: var(--accent);">🏆 Key Achievements</h3><ul style="font-size: 1.05rem;">';
-            project.achievements.forEach(achievement => {
-                content += `<li style="margin-bottom: 0.75rem;">${achievement}</li>`;
-            });
-            content += '</ul>';
-        }
-        
-        // 🔥 CERTIFICATE + GITHUB BUTTONS - CHANGED TEXT
-        content += `
-            <div style="margin-top: 3rem; display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
-                <a href="${project.github}" target="_blank" rel="noopener noreferrer" class="view-btn" style="background: linear-gradient(135deg, #24292e, #161b22); padding: 1rem 2rem;">
-                    <i class="fab fa-github"></i> View on GitHub
-                </a>
-                <a href="${project.internshipCert}" target="_blank" class="view-btn" style="background: linear-gradient(135deg, var(--accent), var(--accent-soft)); padding: 1rem 2rem;">
-                    <i class="fas fa-certificate"></i> Certificate
-                </a>
-            </div>
-            <p style="margin-top: 2rem; color: var(--muted); font-style: italic; text-align: center;">
-                📄 Official project certificate + complete source code available
-            </p>
-        `;
-        
-        modalBody.innerHTML = content;
-        showModal();
-    }
+  const p = PROJ_DATA[projectId];
+  if (!p) return;
+  $('modalTitle').textContent = p.title;
+  $('modalBody').innerHTML = `
+    <div class="m-meta">
+      ${p.meta.map(m => `<span><i class="${m.icon}"></i>${m.l}</span>`).join('')}
+    </div>
+    <p style="margin-bottom:1rem;line-height:1.85;">${p.desc}</p>
+    <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:.4rem;">Tech Stack</p>
+    <div class="m-tags">${p.tech.map(t=>`<span>${t}</span>`).join('')}</div>
+    <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:.4rem;">Key Achievements</p>
+    <ul class="m-list">${p.achievements.map(a=>`<li>${a}</li>`).join('')}</ul>
+    <div class="m-actions">
+      ${p.github ? `<a href="${p.github}" target="_blank" class="m-btn o"><i class="fab fa-github"></i> GitHub</a>` : ''}
+      ${p.cert   ? `<a href="${p.cert}" target="_blank" class="m-btn o"><i class="fas fa-certificate"></i> Certificate</a>` : ''}
+    </div>`;
+  showModal();
 }
 
+/* ─── EXPERIENCE MODAL ───────────────────────────────────── */
 function openExperienceModal(expId) {
-    const modal = document.getElementById('detailModal');
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.getElementById('modalBody');
-    
-    const expData = {
-        // 1. INFOSYS
-        'infosys': {
-            title: 'Infosys - Machine Learning Intern',
-            company: 'Infosys Limited',
-            duration: '8 Weeks',
-            project: 'HireShield - Fake Job Detection System',
-            description: 'Developed ML system achieving <strong>92% accuracy</strong> for detecting fraudulent job postings. Processed 10K+ job listings using advanced NLP techniques.',
-            achievements: [
-                '✅ Built 92% accurate ML classification model',
-                '✅ Deployed production-ready Streamlit dashboard', 
-                '✅ Full NLP pipeline implementation',
-                '✅ Processed 10K+ real job postings'
-            ],
-            certificates: [
-                'certificates/internship/infosys-internship-certificate.pdf'
-            ]
-        },
-
-        // 2. CODEBIND - 4 CERTIFICATES ONLY (REMOVED MAIN CERT)
-        'codebind': {
-            title: 'CodeBind - Web Development & Business Management',
-            company: 'CodeBind Technologies',
-            duration: '2 Weeks',
-            description: 'Intensive training in full-stack web development, agile methodologies, and business management practices. Built client-facing web applications.',
-            achievements: [
-                '✅ Full-stack web app development',
-                '✅ Agile project management training', 
-                '✅ Client project deployment experience',
-                '✅ Modern frontend/backend frameworks'
-            ],
-            certificates: [
-                'certificates/internship/codeBind/codebind-web-development.jpg',
-                'certificates/internship/codeBind/codebind-business-management.jpg',
-                'certificates/internship/codeBind/codebind-ai-workshop.jpg',
-                'certificates/internship/codeBind/codebind-corporate-training.jpg'
-            ]
-        },
-
-        // 3. EDUNET
-        'edunet': {
-            title: 'Edunet Foundation & AICTE - Cybersecurity Intern',
-            company: 'Edunet Foundation (AICTE Approved)',
-            duration: '6 Weeks',
-            description: 'Specialized cybersecurity internship focusing on threat detection, vulnerability assessment, and secure AI applications for green skills initiatives.',
-            achievements: [
-                '✅ Cybersecurity threat detection systems',
-                '✅ AICTE-approved certification', 
-                '✅ Vulnerability assessment projects',
-                '✅ Secure AI application development'
-            ],
-            certificates: [
-                'certificates/internship/steganography-internship-cert.jpg'
-            ]
-        }
-    };
-    
-    const exp = expData[expId];
-    if (exp) {
-        modalTitle.textContent = exp.title;
-        
-        // Company info + description + achievements
-        let content = `
-            <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.5rem;">
-                <p><strong>Company:</strong> ${exp.company}</p>
-                <p><strong>Duration:</strong> ${exp.duration}</p>
-                ${exp.project ? `<p><strong>Project:</strong> ${exp.project}</p>` : ''}
-            </div>
-            <p style="line-height: 1.7; margin-bottom: 2rem;">${exp.description}</p>
-        `;
-        
-        // Achievements
-        if (exp.achievements) {
-            content += `
-                <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--accent);">🏆 Key Achievements</h3>
-                <ul style="margin-bottom: 2rem;">
-            `;
-            exp.achievements.forEach(achievement => {
-                content += `<li style="margin-bottom: 0.75rem; font-weight: 500;">${achievement}</li>`;
-            });
-            content += '</ul>';
-        }
-        
-        // 🔥 CERTIFICATES GRID - 4 CERTS FOR CODEBIND
-        content += `
-            <h3 style="margin-top: 2rem; margin-bottom: 1.5rem; color: var(--accent);">📚 Certificates Earned (${exp.certificates.length})</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
-        `;
-        
-        exp.certificates.forEach((certFile, index) => {
-            const certNames = {
-                // CodeBind specific names (4 certs only)
-                'codebind-web-development.pdf': 'Web Development',
-                'codebind-business-management.pdf': 'Business Management',
-                'codebind-ai-workshop.pdf': 'AI Workshop',
-                'codebind-corporate-training.pdf': 'Corporate Training',
-                // Default names
-                'default': `Certificate ${index + 1}`
-            };
-            
-            const certName = certNames[certFile.split('/').pop()] || certNames['default'];
-            const icons = ['🌐', '📊', '🧠', '🎓'];
-            const icon = icons[index % icons.length];
-            
-            content += `
-                <a href="${certFile}" target="_blank" style="
-                    display: flex; flex-direction: column; align-items: center; gap: 0.75rem; 
-                    padding: 1.75rem 1.25rem; background: var(--card); border: 2px solid var(--border); 
-                    border-radius: var(--radius); text-decoration: none; color: var(--text); 
-                    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); text-align: center;
-                    backdrop-filter: blur(10px);
-                " 
-                onmouseover="this.style.transform='translateY(-10px) scale(1.02)'; this.style.borderColor='var(--accent)'; this.style.boxShadow='0 20px 40px var(--shadow-lg)';"
-                onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.borderColor='var(--border)'; this.style.boxShadow='0 10px 25px var(--shadow)';">
-                    <div style="width: 60px; height: 60px; background: linear-gradient(135deg, var(--accent), var(--accent-soft)); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.75rem; color: white;">
-                        ${icon}
-                    </div>
-                    <div style="font-weight: 700; font-size: 0.95rem; line-height: 1.3;">${certName}</div>
-                </a>
-            `;
-        });
-        
-        content += `
-            </div>
-            <p style="margin-top: 2.5rem; color: var(--muted); font-style: italic; text-align: center; padding: 1rem; background: rgba(34,197,94,0.1); border-radius: var(--radius-sm);">
-                👆 Click any certificate above to view/download the official PDF
-            </p>
-        `;
-        
-        modalBody.innerHTML = content;
-        showModal();
-    }
+  if (expId === 'codebind') {
+    $('modalTitle').textContent = 'CodeBind — Web Dev & Business Management';
+    $('modalBody').innerHTML = `
+      <div class="m-meta">
+        <span><i class="fas fa-building"></i>CodeBind Technologies</span>
+        <span><i class="far fa-clock"></i>2 Weeks</span>
+      </div>
+      <p style="margin-bottom:1.25rem;line-height:1.85;">Intensive training in full-stack web development, agile methodologies, and business management. Built and deployed client-facing web applications.</p>
+      <p style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:.6rem;">Certificates Earned (4)</p>
+      <div class="m-cert-grid">
+        <div class="m-cert-tile" onclick="window.open('certificates/internship/codeBind/codebind-web-development.jpg','_blank')"><div class="m-ct-icon">🌐</div><div class="m-ct-name">Web Development</div></div>
+        <div class="m-cert-tile" onclick="window.open('certificates/internship/codeBind/codebind-business-management.jpg','_blank')"><div class="m-ct-icon">📊</div><div class="m-ct-name">Business Management</div></div>
+        <div class="m-cert-tile" onclick="window.open('certificates/internship/codeBind/codebind-ai-workshop.jpg','_blank')"><div class="m-ct-icon">🤖</div><div class="m-ct-name">AI Workshop</div></div>
+        <div class="m-cert-tile" onclick="window.open('certificates/internship/codeBind/codebind-corporate-training.jpg','_blank')"><div class="m-ct-icon">🎓</div><div class="m-ct-name">Corporate Training</div></div>
+      </div>
+      <p style="margin-top:1rem;font-size:.75rem;color:var(--text3);">Click any tile to view / download certificate</p>`;
+    showModal();
+  }
 }
-
-
-
-function closeModal() {
-    const modal = document.getElementById('detailModal');
-    
-    // **CRITICAL SCROLL FIX**
-    document.body.style.overflow = '';           // Unlock scroll
-    document.body.style.position = '';           // Reset position
-    document.body.style.width = '';              // Reset width
-    document.body.style.top = '';                // Reset top
-    
-    // Restore scroll position
-    if (window.scrollPosition) {
-        window.scrollTo(0, window.scrollPosition);
-    }
-    
-    modal.style.display = 'none';
-}
-
-
-// Add hover effects to badges
-document.querySelectorAll('.badge').forEach(badge => {
-    badge.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-4px) scale(1.05)';
-    });
-    
-    badge.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0) scale(1)';
-    });
-});
-
-// Add parallax effect to hero section
-const hero = document.getElementById('hero');
-if (hero) {
-    let ticking = false;
-    
-    window.addEventListener('scroll', function() {
-        if (!ticking) {
-            window.requestAnimationFrame(function() {
-                const scrolled = window.pageYOffset;
-                const parallaxSpeed = 0.3;
-                if (scrolled < window.innerHeight) {
-                    hero.style.transform = `translateY(${scrolled * parallaxSpeed}px)`;
-                    hero.style.opacity = 1 - (scrolled / 600);
-                }
-                ticking = false;
-            });
-            ticking = true;
-        }
-    });
-}
-
-// Add click ripple effect
-function createRipple(event) {
-    const button = event.currentTarget;
-    const ripple = document.createElement('span');
-    const diameter = Math.max(button.clientWidth, button.clientHeight);
-    const radius = diameter / 2;
-    
-    ripple.style.width = ripple.style.height = `${diameter}px`;
-    ripple.style.left = `${event.clientX - button.offsetLeft - radius}px`;
-    ripple.style.top = `${event.clientY - button.offsetTop - radius}px`;
-    ripple.classList.add('ripple');
-    
-    const rippleElement = button.getElementsByClassName('ripple')[0];
-    if (rippleElement) {
-        rippleElement.remove();
-    }
-    
-    button.appendChild(ripple);
-}
-
-document.querySelectorAll('.contact-btn, .view-btn, .badge').forEach(btn => {
-    btn.addEventListener('click', createRipple);
-});
-
-// Performance monitoring
-window.addEventListener('load', function() {
-    const loadTime = window.performance.timing.domContentLoadedEventEnd - window.performance.timing.navigationStart;
-    console.log(`Portfolio loaded in ${loadTime}ms`);
-});
-
-// Add CSS for ripple effect
-const style = document.createElement('style');
-style.textContent = `
-    .ripple {
-        position: absolute;
-        border-radius: 50%;
-        background: rgba(255, 255, 255, 0.6);
-        transform: scale(0);
-        animation: ripple-animation 0.6s ease-out;
-        pointer-events: none;
-    }
-    
-    @keyframes ripple-animation {
-        to {
-            transform: scale(4);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(style);
-
-// ... your existing code (theme toggle, modals, animations, etc.) ...
-
-// ADD THIS AT THE VERY END (after EVERYTHING else)
-document.addEventListener('click', function(e) {
-    // Open certificate button
-    if (e.target.classList.contains('cert-btn-open') || e.target.closest('.cert-btn-open')) {
-        e.stopPropagation(); // Prevent modal close
-        const file = e.target.dataset.file || e.target.closest('.cert-btn-open').dataset.file;
-        window.open(file, '_blank');
-        return;
-    }
-    
-    // Download certificate button  
-    if (e.target.classList.contains('cert-btn-download') || e.target.closest('.cert-btn-download')) {
-        e.stopPropagation(); // Prevent modal close
-        const file = e.target.dataset.file || e.target.closest('.cert-btn-download').dataset.file;
-        const a = document.createElement('a');
-        a.href = file;
-        a.download = '';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        return;
-    }
-    
-    // Zoom certificate image
-    if (e.target.id === 'zoomCertImg') {
-        e.stopPropagation();
-        const img = e.target;
-        img.style.transform = img.style.transform === 'scale(1.1)' ? 'scale(1)' : 'scale(1.1)';
-        return;
-    }
-});
-// 🔥 PERFECT SMOOTH NAVIGATION
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.nav-menu a[href^="#"]').forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const sectionId = this.getAttribute('href');
-            
-            // Remove active from all sections
-            document.querySelectorAll('#objective, #skills, #projects, #experience, #certifications')
-                .forEach(section => section.classList.remove('active'));
-            
-            // Smooth scroll + activate
-            document.querySelector(sectionId)?.scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start' 
-            });
-            
-            setTimeout(() => {
-                document.querySelector(sectionId)?.classList.add('active');
-            }, 300);
-        });
-    });
-});

@@ -1,445 +1,741 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="color-scheme" content="dark light" />
-  <title>Ashwin T - Aspiring Java Developer</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
+  <meta name="color-scheme" content="dark light"/>
+  <meta name="theme-color" content="#080c14"/>
+  <meta name="description" content="Ashwin T — Aspiring Java Developer & ML Engineer. Final-year CSE student. CGPA 9.2. Open to FAANG opportunities."/>
+  <meta property="og:title" content="Ashwin T — Java Developer"/>
+  <meta property="og:description" content="Principal-level portfolio: Java, Python, ML, Full Stack. Infosys Intern. 9.2 CGPA."/>
+  <meta name="twitter:card" content="summary_large_image"/>
+
+  <title>Ashwin T — Java Developer</title>
+
+  <!-- PWA Manifest inline -->
+  <link rel="manifest" href="manifest.json"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+
+  <!-- Critical font preload -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <!-- GSAP + Three.js + ScrollTrigger from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+
   <link rel="stylesheet" href="style.css"/>
 </head>
+
 <body data-theme="dark">
 
-  <button id="themeToggle" class="theme-toggle" aria-label="Toggle between dark and light mode">
-    <i class="fas fa-sun sun"></i>
-    <i class="fas fa-moon moon"></i>
-  </button>
-
-<header id="hero">
-  <div class="container">
-    <!-- ANIMATED NAV BAR -->
-    <nav class="hero-nav">
-  <div class="nav-menu">
-    <a href="#objective">About</a>
-    <a href="#education">Education</a>           <!-- ← added here -->
-    <a href="#skills">Skills</a>
-    <a href="#projects">Projects</a>
-    <a href="#experience">Experience</a>
-    <a href="#certifications">Certifications</a>
-  </div>
-</nav>
-
-    <!-- MAIN HERO -->
-    <div class="hero-main">
-      <div class="hero-text">
-        <h1>Hi, I'm</h1>
-        <h2 class="brand">Ashwin T</h2>
-      <p class="hero-subtitle">
-    Aspiring Java Developer<br><span style="font-size:0.95em;">B.E. Computer Science Engineering</span>
-</p>
-
-
-        
-        <!-- ANIMATED SOCIAL ICONS -->
-        <div class="social-hero">
-          <a href="mailto:ashwin2006t@gmail.com" class="social-link email" title="Email">
-            <i class="fas fa-envelope"></i>
-          </a>
-          <a href="https://linkedin.com/in/ashwin2006" class="social-link linkedin" target="_blank" title="LinkedIn">
-            <i class="fab fa-linkedin-in"></i>
-          </a>
-          <a href="https://github.com/Ashwin-2006-t" class="social-link github" target="_blank" title="GitHub">
-            <i class="fab fa-github"></i>
-          </a>
-           <a href="https://leetcode.com/u/Ashwin_2006_T/" class="social-link leetcode" title="LeetCode" target="_blank">
-    <i class="fas fa-code"></i>
-  </a>
- <!-- 🔥 HACKERRANK - UNIQUE ORANGE LIGHTBULB -->
-<a href="https://www.hackerrank.com/@yourusername" class="social-link hackerrank" title="HackerRank" target="_blank">
-    <i class="fas fa-lightbulb" style="color: #f9fbfb;"></i>
-</a>
-<a href="https://www.hackerearth.com/@ashwin2006t/" class="social-link hackerearth" title="HackerEarth" target="_blank">
-    <i class="fas fa-brain" style="color: #f9fafa;"></i>
-</a>
-        </div>
-      </div>
-      
-      <!-- YOUR PHOTO -->
-      <div class="hero-image">
-        <img src="Ashwin T.jpeg" alt="Ashwin T - Java Developer" loading="lazy">
-      </div>
+  <!-- ═══════════ LOADING SCREEN ═══════════ -->
+  <div id="loadScreen" aria-hidden="true">
+    <div class="load-inner">
+      <div class="load-logo">Ashwin T</div>
+      <div class="load-bar-track"><div class="load-bar" id="loadBar"></div></div>
+      <div class="load-status" id="loadStatus">Initializing...</div>
     </div>
   </div>
-</header>
 
-  <main>
-    <section id="objective" class="section">
-      <div class="container">
-        <h2 class="section-title">Career Objective</h2>
-        <div class="card">
-          <p>Aspiring Java Developer and final-year Computer Science Engineering student with a strong foundation in <strong>Core Java, object-oriented programming and problem-solving skills</strong>. Seeking an entry-level position in an organization where I can apply my technical knowledge, adapt to new technologies, follow organizational processes, and contribute effectively to team and organizational goals.</p>
-        </div>
+  <!-- ═══════════ THREE.JS CANVAS ═══════════ -->
+  <canvas id="bgCanvas" aria-hidden="true"></canvas>
+
+  <!-- ═══════════ CURSOR ═══════════ -->
+  <div class="cursor-dot" id="cursorDot" aria-hidden="true"></div>
+  <div class="cursor-ring" id="cursorRing" aria-hidden="true"></div>
+  <div class="cursor-text" id="cursorText" aria-hidden="true"></div>
+
+  <!-- ═══════════ PROGRESS BAR ═══════════ -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- ═══════════ MATRIX RAIN (Easter Egg) ═══════════ -->
+  <canvas id="matrixCanvas" aria-hidden="true"></canvas>
+
+  <!-- ═══════════ TERMINAL (Easter Egg) ═══════════ -->
+  <div id="terminal" role="dialog" aria-label="Developer Terminal" aria-hidden="true">
+    <div class="terminal-header">
+      <div class="term-dots">
+        <span class="td red" onclick="closeTerminal()"></span>
+        <span class="td yellow"></span>
+        <span class="td green"></span>
       </div>
-    </section>
-
-    <section id="education" class="section gradient-bg">
-      <div class="container">
-        <h2 class="section-title">Education</h2>
-        <div class="timeline">
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <h3>B.E. Computer Science Engineering</h3>
-              <p><strong>Panimalar Engineering College</strong><br>2023 – 2027</p>
-              <div class="highlight">CGPA: 9.0 / 10</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <h3>Class XII – CBSE</h3>
-              <p><strong>Kendriya Vidyalaya Air Force Station</strong><br>2023</p>
-              <div class="highlight">85.8%</div>
-            </div>
-          </div>
-          <div class="timeline-item">
-            <div class="timeline-dot"></div>
-            <div class="timeline-content">
-              <h3>Class X – CBSE</h3>
-              <p><strong>Kendriya Vidyalaya Air Force Station</strong><br>2021</p>
-              <div class="highlight">84.4%</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section id="skills" class="section">
-      <div class="container">
-        <h2 class="section-title">Technical Skills</h2>
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-label">Programming Languages</div>
-            <div class="stat-tags">
-              <span class="badge primary">Java</span>
-              <span class="badge primary">Python</span>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Web Technologies</div>
-            <div class="stat-tags">
-              <span class="badge">HTML</span>
-              <span class="badge">CSS</span>
-              <span class="badge">JavaScript</span>
-              <span class="badge">Django</span>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Databases</div>
-            <div class="stat-tags">
-              <span class="badge">MySQL</span>
-              <span class="badge">Oracle SQL</span>
-              <span class="badge">MongoDB</span>
-            </div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">Tools & Platforms</div>
-            <div class="stat-tags">
-              <span class="badge">Git</span>
-              <span class="badge">VS Code</span>
-              <span class="badge">Android Studio</span>
-              <span class="badge">Eclipse</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  <section id="projects" class="section gradient-bg">
-  <div class="container">
-    <h2 class="section-title">Projects</h2>
-    <div class="projects-grid">
-      
-      <!-- 1. INFO SYS FAKE JOB DETECTION (FEATURED #1) -->
-      <div class="project-card featured" data-project="infosys-job-detection">
-        <div class="project-icon">
-          <i class="fas fa-shield-alt"></i>
-        </div>
-        <h3>HireShield - Fake Job Detection</h3>
-        <p class="project-tech">Python • ML • NLP • Scikit-learn • Streamlit</p>
-        <p class="project-year">Infosys Internship • 2025</p>
-        <ul>
-          <li><strong>92% accuracy</strong> ML model for fraud detection</li>
-          <li>Processed <strong>10K+ job postings</strong> during internship</li>
-          <li>Full <strong>NLP pipeline</strong> for text analysis</li>
-          <li>Interactive <strong>Streamlit dashboard</strong> deployment</li>
-        </ul>
-        <button class="view-btn" onclick="openProjectModal('infosys-job-detection')">
-          <i class="fas fa-folder-open"></i> View Project Files
-        </button>
-      </div>
-
-      <!-- 2. EV FORECASTING (FEATURED #2 - YOUR ORIGINAL) -->
-      <div class="project-card featured" data-project="ev-forecasting">
-        <div class="project-icon">
-          <i class="fas fa-charging-station"></i>
-        </div>
-        <h3>EV Forecasting Project</h3>
-        <p class="project-tech">Python • Streamlit • Machine Learning</p>
-        <p class="project-year">2025</p>
-        <ul>
-          <li>Developed Python model for EV adoption forecasting</li>
-          <li>Implemented feature engineering and data preprocessing</li>
-          <li>Created interactive visualizations using Streamlit</li>
-          <li>Analyzed trends in electric vehicle market growth</li>
-        </ul>
-        <button class="view-btn" onclick="openProjectModal('ev-forecasting')">
-          <i class="fas fa-folder-open"></i> View Project Files
-        </button>
-      </div>
-
-      <!-- 3. STEGANOGRAPHY (REGULAR - YOUR ORIGINAL) -->
-      <div class="project-card" data-project="steganography">
-        <div class="project-icon">
-          <i class="fas fa-lock"></i>
-        </div>
-        <h3>Steganography Tool</h3>
-        <p class="project-tech">Python • Image Processing • LSB</p>
-        <p class="project-year">2024</p>
-        <ul>
-          <li>Designed command-line tool for secure message hiding</li>
-          <li>Implemented Least Significant Bit (LSB) encoding method</li>
-          <li>Built encoding and decoding functionality in images</li>
-          <li>Ensured data security through steganographic techniques</li>
-        </ul>
-        <button class="view-btn" onclick="openProjectModal('steganography')">
-          <i class="fas fa-folder-open"></i> View Project Files
-        </button>
-      </div>
-
+      <span class="term-title">ashwin@portfolio:~$</span>
+      <button class="term-close" onclick="closeTerminal()" aria-label="Close terminal">✕</button>
+    </div>
+    <div class="terminal-body" id="termBody"></div>
+    <div class="terminal-input-row">
+      <span class="term-prompt">❯</span>
+      <input type="text" id="termInput" placeholder="Type 'help' for commands..." autocomplete="off" spellcheck="false"/>
     </div>
   </div>
-</section>
 
-
-<section id="experience" class="section gradient-bg">
-  <div class="container">
-    <h2 class="section-title">Internship Experience</h2>
-    <div class="experience-grid">
-      
-      <!-- 1. INFOSYS - Direct Certificate Link (1 cert) -->
-      <div class="exp-card featured" data-experience="infosys">
-        <div class="exp-header">
-          <div class="exp-icon">
-            <i class="fas fa-laptop-code"></i>
-          </div>
-          <div>
-            <h3>Python Full Stack Developer Intern</h3>
-            <p class="company">Infosys</p>
-            <p class="duration">8 Weeks</p>
-          </div>
-        </div>
-        <p class="exp-project"><strong>Project:</strong> Full Stack Web Application</p>
-        <ul>
-          <li>Built <strong>REST APIs with Django/Flask</strong></li>
-          <li>Full-stack development with <strong>Python + PostgreSQL</strong></li>
-          <li>Implemented <strong>CI/CD pipelines</strong> & deployment</li>
-          <li>Developed responsive frontend with modern frameworks</li>
-          <li>Agile team collaboration on production systems</li>
-        </ul>
-        <!-- ✅ Direct Link (1 certificate) -->
-        <div style="margin-top: 2rem; text-align: center;">
-          <a href="certificates/internship/infosys-internship-certificate.pdf" target="_blank" class="view-btn">
-            <i class="fas fa-certificate"></i> View Certificate
-          </a>
-        </div>
+  <!-- ═══════════ COMMAND PALETTE ═══════════ -->
+  <div id="cmdPalette" role="dialog" aria-label="Command palette" aria-hidden="true">
+    <div class="cmd-inner">
+      <div class="cmd-search-row">
+        <i class="fas fa-search"></i>
+        <input type="text" id="cmdInput" placeholder="Type a command or search..." autocomplete="off"/>
+        <span class="cmd-kbd">ESC</span>
       </div>
+      <div class="cmd-list" id="cmdList"></div>
+    </div>
+  </div>
 
-      <!-- 2. CODEBIND - MODAL WITH 5 CERTIFICATES -->
-      <div class="exp-card featured" data-experience="codebind">
-        <div class="exp-header">
-          <div class="exp-icon">
-            <i class="fas fa-code"></i>
-          </div>
-          <div>
-            <h3>Web Dev & Business Management Intern</h3>
-            <p class="company">CodeBind</p>
-            <p class="duration">2 Weeks</p>
-          </div>
+  <!-- ═══════════ CONTROLS ═══════════ -->
+  <div class="fab-cluster" aria-label="Quick controls">
+    <button class="fab-main" id="fabMain" aria-label="Open controls" aria-expanded="false">
+      <i class="fas fa-bolt"></i>
+    </button>
+    <div class="fab-items" id="fabItems">
+      <button class="fab-item" id="themeToggle" aria-label="Toggle theme" data-tip="Toggle Theme">
+        <i class="fas fa-sun sun"></i><i class="fas fa-moon moon"></i>
+      </button>
+      <button class="fab-item" onclick="openTerminal()" aria-label="Open terminal" data-tip="Terminal">
+        <i class="fas fa-terminal"></i>
+      </button>
+      <button class="fab-item" onclick="openCmdPalette()" aria-label="Command palette" data-tip="⌘K Palette">
+        <i class="fas fa-search"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════ AI PERSONA BANNER ═══════════ -->
+  <div id="personaBanner" aria-live="polite"></div>
+
+  <!-- ═══════════ HERO ═══════════ -->
+  <header id="hero" aria-label="Introduction">
+    <div class="hero-grid-bg" aria-hidden="true"></div>
+
+    <div class="container">
+      <!-- NAV -->
+      <nav class="hero-nav" role="navigation" aria-label="Main navigation">
+   
+        <div class="nav-menu" id="navMenu">
+          <a href="#objective" class="nav-link">About</a>
+          <a href="#education" class="nav-link">Education</a>
+          <a href="#skills" class="nav-link">Skills</a>
+          <a href="#projects" class="nav-link">Projects</a>
+          <a href="#experience" class="nav-link">Experience</a>
+          <a href="#certifications" class="nav-link">Certs</a>
         </div>
-        <ul>
-          <li>Full-stack web development projects</li>
-          <li>Agile methodologies & business management</li>
-          <li>Client-facing web application deployment</li>
-          <li>Modern JavaScript frameworks training</li>
-        </ul>
-        <!-- 🔥 MODAL BUTTON - Shows 5 certificates -->
-        <div style="margin-top: 2rem; text-align: center;">
-          <button class="view-btn" onclick="openExperienceModal('codebind')">
-            <i class="fas fa-certificate"></i> View 5 Certificates
+        <div class="nav-right">
+          <div class="nav-status">
+            <span class="status-dot"></span>
+            <span>Available for hire</span>
+          </div>
+          <button class="nav-hamburger" id="navHamburger" aria-label="Toggle navigation" aria-expanded="false">
+            <span></span><span></span><span></span>
           </button>
         </div>
-      </div>
+      </nav>
 
-      <!-- 3. EDUNET - Direct Certificate Link (1 cert) -->
-      <div class="exp-card" data-experience="edunet">
-        <div class="exp-header">
-          <div class="exp-icon">
-            <i class="fas fa-shield-alt"></i>
+      <!-- HERO MAIN -->
+      <div class="hero-main">
+        <div class="hero-text" id="heroText">
+
+          <div class="hero-chip" id="heroChip">
+            <span class="chip-dot"></span>
+            <span>B.E. Computer Science • Panimalar • 2027</span>
           </div>
-          <div>
-            <h3>Cybersecurity Intern</h3>
-            <p class="company">Edunet Foundation & AICTE</p>
-            <p class="duration">6 Weeks</p>
+
+          <h1 class="hero-name" id="heroName" aria-label="Hi, I'm Ashwin T">
+            <span class="name-hi">Hi, I'm</span>
+            <div class="name-brand-wrap">
+              <span class="name-brand" id="nameBrand">Ashwin T</span>
+            </div>
+          </h1>
+
+          <div class="hero-role-wrap">
+            <span class="role-prefix">→ </span>
+            <span class="role-text" id="roleText">Java Developer</span>
+            <span class="role-cursor">|</span>
+          </div>
+
+          <p class="hero-bio" id="heroBio">
+            Final-year CSE student with a strong foundation in
+            <span class="highlight-word">Core Java</span>,
+            <span class="highlight-word">OOP</span> &amp;
+            <span class="highlight-word">Machine Learning</span>.
+            Built production ML systems at <strong>Infosys</strong>.
+            CGPA&nbsp;<strong>9.2/10</strong>.
+          </p>
+
+          <!-- LIVE HERO STATS -->
+          <div class="hero-stats" id="heroStats">
+            <div class="hstat" data-target="17">
+              <span class="hstat-n">0</span><span class="hstat-s">+</span>
+              <span class="hstat-l">Certifications</span>
+            </div>
+            <div class="hstat-div"></div>
+            <div class="hstat" data-target="4">
+              <span class="hstat-n">0</span>
+              <span class="hstat-l">Projects</span>
+            </div>
+            <div class="hstat-div"></div>
+            <div class="hstat" data-target="3">
+              <span class="hstat-n">0</span>
+              <span class="hstat-l">Internships</span>
+            </div>
+            
+          </div>
+
+          <!-- SOCIAL -->
+          <div class="social-hero" id="heroSocial">
+            <a href="mailto:ashwin2006t@gmail.com" class="social-link email" title="Email" aria-label="Email"><i class="fas fa-envelope"></i></a>
+            <a href="https://linkedin.com/in/ashwin2006" class="social-link linkedin" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/Ashwin-2006-t" class="social-link github" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://leetcode.com/u/Ashwin_2006_T/" class="social-link leetcode" target="_blank" rel="noopener" title="LeetCode" aria-label="LeetCode"><i class="fas fa-code"></i></a>
+            <a href="https://www.hackerrank.com/profile/ashwin2006t" class="social-link hackerrank" target="_blank" rel="noopener" title="HackerRank" aria-label="HackerRank"><i class="fas fa-lightbulb"></i></a>
+            <a href="https://www.hackerearth.com/@ashwin2006t/" class="social-link hackerearth" target="_blank" rel="noopener" title="HackerEarth" aria-label="HackerEarth"><i class="fas fa-brain"></i></a>
+          <a href="https://www.credly.com/users/ashwin-t.a5d11353" class="social-link credly" target="_blank" rel="noopener" title="Credly" aria-label="17+ Credly Badges">
+  <i class="fas fa-certificate"></i>
+</a>
+
+</a>
+
+          </div>
+
+          <!-- CTA -->
+          <div class="hero-cta" id="heroCta">
+            <a href="resume/Ashwin_T__Resume(2026).pdf" class="btn-primary magnetic" target="_blank" data-cursor="view">
+              <i class="fas fa-file-pdf"></i>
+              <span>View Resume</span>
+              <span class="btn-shine"></span>
+            </a>
+            <button class="btn-ghost magnetic" onclick="openTerminal()" data-cursor="code">
+              <i class="fas fa-terminal"></i>
+              <span>Open Terminal</span>
+            </button>
           </div>
         </div>
-        <ul>
-          <li>AICTE-approved cybersecurity specialization</li>
-          <li>Threat detection & vulnerability assessment</li>
-          <li>Secure AI application development</li>
-          <li>Cybersecurity best practices training</li>
-        </ul>
-        <!-- ✅ Direct Link (1 certificate) -->
-        <div style="margin-top: 2rem; text-align: center;">
-          <a href="certificates/internship/steganography-internship-cert.jpg" target="_blank" class="view-btn">
-            <i class="fas fa-certificate"></i> View Certificate
-          </a>
+
+        <!-- PHOTO -->
+        <div class="hero-image-wrap" id="heroImg">
+          <div class="image-orbit" aria-hidden="true">
+            <div class="orbit-ring r1"></div>
+            <div class="orbit-ring r2"></div>
+            <div class="orbit-dot d1"><i class="fab fa-java"></i></div>
+            <div class="orbit-dot d2"><i class="fab fa-python"></i></div>
+            <div class="orbit-dot d3"><i class="fas fa-brain"></i></div>
+            <div class="orbit-dot d4"><i class="fab fa-aws"></i></div>
+          </div>
+          <div class="hero-photo-card">
+            <img src="Ashwin T.jpeg" alt="Ashwin T — Java Developer & ML Engineer" loading="eager" width="320" height="420"/>
+            <div class="photo-glow"></div>
+          </div>
+          <div class="photo-chip">
+            <span class="chip-dot"></span>Open to Work
+          </div>
         </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-
-
- <section id="certifications" class="section gradient-bg">
-  <div class="container">
-    <h2 class="section-title">Certifications</h2>
-    <div class="certs-grid">
-      
-      <!-- Individual Certifications -->
-      <div class="cert-card clickable" onclick="openCertModal('google-analytics')">
-        <div class="cert-icon">
-          <i class="fab fa-google"></i>
-        </div>
-        <h3>Google Analytics</h3>
-        <p class="cert-issuer">Google</p>
-        <div class="cert-view">
-          <i class="fas fa-eye"></i> View Certificate
-        </div>
-      </div>
-
-      <div class="cert-card clickable" onclick="openCertModal('aws-cloud')">
-        <div class="cert-icon">
-          <i class="fab fa-aws"></i>
-        </div>
-        <h3>AWS Cloud Support Associate</h3>
-        <p class="cert-issuer">Amazon Web Services</p>
-        <div class="cert-view">
-          <i class="fas fa-eye"></i> View Certificate
-        </div>
-      </div>
-
-      <!-- Infosys Certifications Bundle -->
-      <div class="cert-card bundle-card clickable" onclick="openCertModal('infosys-bundle')">
-        <div class="cert-icon bundle-icon">
-          <i class="fas fa-briefcase"></i>
-        </div>
-        <h3>Infosys Certifications</h3>
-        <p class="cert-issuer">Infosys (17 Certifications)</p>
-        <div class="cert-count">+17 Domains</div>
-        <div class="cert-view">
-          <i class="fas fa-eye"></i> View All Certifications
-        </div>
-      </div>
-
-      <!-- IBM/Edunet Bundle -->
-      <div class="cert-card bundle-card clickable" onclick="openCertModal('ibm-edunet')">
-        <div class="cert-icon bundle-icon">
-          <i class="fas fa-graduation-cap"></i>
-        </div>
-        <h3>IBM & Edunet Certifications</h3>
-        <p class="cert-issuer">IBM via Edunet Foundation</p>
-        <div class="cert-count">Multiple Domains</div>
-        <div class="cert-view">
-          <i class="fas fa-eye"></i> View All Certifications
-        </div>
-      </div>
-
-      <!-- Existing Certifications (Keep All) -->
-      <div class="cert-card clickable" onclick="openCertModal('fullstack')">
-        <div class="cert-icon">
-          <i class="fas fa-certificate"></i>
-        </div>
-        <h3>Diploma in Full Stack Development</h3>
-        <p class="cert-issuer">CASS Academy</p>
-        <div class="cert-grade">Grade: A (83%)</div>
-        <div class="cert-view"><i class="fas fa-eye"></i> Click to view</div>
-      </div>
-
-      <div class="cert-card clickable" onclick="openCertModal('oracle-cloud')">
-        <div class="cert-icon"><i class="fas fa-cloud"></i></div>
-        <h3>Oracle Cloud Infrastructure</h3>
-        <p class="cert-issuer">Oracle</p>
-        <div class="cert-view"><i class="fas fa-eye"></i> Click to view</div>
-      </div>
-
-      <div class="cert-card clickable" onclick="openCertModal('fusion-ai')">
-        <div class="cert-icon"><i class="fas fa-robot"></i></div>
-        <h3>Fusion AI Foundations</h3>
-        <p class="cert-issuer">Oracle</p>
-        <div class="cert-view"><i class="fas fa-eye"></i> Click to view</div>
-      </div>
-
-      <div class="cert-card clickable" onclick="openCertModal('machine-learning')">
-        <div class="cert-icon"><i class="fas fa-graduation-cap"></i></div>
-        <h3>Introduction to Machine Learning</h3>
-        <p class="cert-issuer">NPTEL, IIT Kharagpur</p>
-        <div class="cert-view"><i class="fas fa-eye"></i> Click to view</div>
-      </div>
-
-      <div class="cert-card clickable" onclick="openCertModal('servicenow-csa')">
-        <div class="cert-icon"><i class="fas fa-tools"></i></div>
-        <h3>ServiceNow CSA Certification</h3>
-        <p class="cert-issuer">ServiceNow</p>
-        <div class="cert-view"><i class="fas fa-eye"></i> Click to view</div>
       </div>
     </div>
+
+    <!-- SCROLL NUDGE -->
+    <div class="scroll-nudge" aria-hidden="true">
+      <div class="nudge-line"></div>
+      <span>scroll</span>
+    </div>
+  </header>
+
+  <!-- ═══════════ TICKER ═══════════ -->
+  <div class="ticker-wrap" aria-hidden="true">
+    <div class="ticker-track">
+      <span>Java Developer</span><i class="fas fa-circle-dot"></i>
+      <span>Full Stack Engineer</span><i class="fas fa-circle-dot"></i>
+      <span>ML Practitioner</span><i class="fas fa-circle-dot"></i>
+      <span>Cloud — AWS &amp; Oracle</span><i class="fas fa-circle-dot"></i>
+      <span>9.2 CGPA</span><i class="fas fa-circle-dot"></i>
+      <span>Infosys Intern</span><i class="fas fa-circle-dot"></i>
+      <span>ServiceNow CSA</span><i class="fas fa-circle-dot"></i>
+      <span>92% ML Model</span><i class="fas fa-circle-dot"></i>
+      <!-- duplicate for seamless loop -->
+      <span>Java Developer</span><i class="fas fa-circle-dot"></i>
+      <span>Full Stack Engineer</span><i class="fas fa-circle-dot"></i>
+      <span>ML Practitioner</span><i class="fas fa-circle-dot"></i>
+      <span>Cloud — AWS &amp; Oracle</span><i class="fas fa-circle-dot"></i>
+      <span>9.2 CGPA</span><i class="fas fa-circle-dot"></i>
+      <span>Infosys Intern</span><i class="fas fa-circle-dot"></i>
+    </div>
   </div>
-</section>
 
+  <main>
 
-    <section id="soft-skills" class="section">
+    <!-- ═══════════ ABOUT ═══════════ -->
+    <section id="objective" class="section" aria-labelledby="obj-title">
       <div class="container">
-        <h2 class="section-title">Soft Skills</h2>
-        <div class="soft-skills-grid">
-          <div class="skill-card">
-            <div class="skill-icon">
-              <i class="fas fa-comments"></i>
-            </div>
-            <h3>Communication</h3>
+        <div class="section-header reveal">
+          <span class="section-label">01 — About</span>
+          <h2 class="section-title" id="obj-title">Career <em>Objective</em></h2>
+        </div>
+        <div class="about-grid">
+          <div class="about-card card reveal">
+            <div class="about-quote">"</div>
+            <p>Aspiring Java Developer and pre-final year Computer Science Engineering student with a strong foundation in <strong>Core Java, object-oriented programming and problem-solving skills</strong>. Seeking an entry-level position in an organization where I can apply my technical knowledge, adapt to new technologies, follow organizational processes, and contribute effectively to team and organizational goals.</p>
           </div>
-          <div class="skill-card">
-            <div class="skill-icon">
-              <i class="fas fa-clock"></i>
-            </div>
-            <h3>Time Management</h3>
+          <div class="about-right">
+            <div class="about-kv reveal"><div class="kv-icon"><i class="fas fa-map-marker-alt"></i></div><div><div class="kv-label">Location</div><div class="kv-val">Chennai, Tamil Nadu, India</div></div></div>
+            <div class="about-kv reveal"><div class="kv-icon"><i class="fas fa-university"></i></div><div><div class="kv-label">College</div><div class="kv-val">Panimalar Engineering College</div></div></div>
+            <div class="about-kv reveal"><div class="kv-icon"><i class="fas fa-star"></i></div><div><div class="kv-label">CGPA</div><div class="kv-val">9.2 / 10 <span class="pill-g">Top 5%</span></div></div></div>
+            <div class="about-kv reveal"><div class="kv-icon"><i class="fas fa-graduation-cap"></i></div><div><div class="kv-label">Graduating</div><div class="kv-val">2027 <span class="pill-g">Seeking roles now</span></div></div></div>
           </div>
-          <div class="skill-card">
-            <div class="skill-icon">
-              <i class="fas fa-sync-alt"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ EDUCATION ═══════════ -->
+    <section id="education" class="section alt-bg" aria-labelledby="edu-title">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">02 — Education</span>
+          <h2 class="section-title" id="edu-title">Academic <em>Journey</em></h2>
+        </div>
+        <div class="timeline">
+          <div class="tl-item reveal">
+            <div class="tl-year">2027</div>
+            <div class="tl-dot pulse"></div>
+            <div class="tl-card">
+              <div class="tl-badge">Current</div>
+              <h3>B.E. Computer Science Engineering</h3>
+              <p><i class="fas fa-building"></i> Panimalar Engineering College &nbsp;·&nbsp; 2023–2027</p>
+              <div class="tl-score">CGPA <strong>9.2</strong> / 10</div>
             </div>
-            <h3>Adaptability</h3>
           </div>
-          <div class="skill-card">
-            <div class="skill-icon">
-              <i class="fas fa-book-reader"></i>
+          <div class="tl-item reveal">
+            <div class="tl-year">2023</div>
+            <div class="tl-dot"></div>
+            <div class="tl-card">
+              <h3>Class XII — CBSE</h3>
+              <p><i class="fas fa-building"></i> Kendriya Vidyalaya Air Force Station &nbsp;·&nbsp; 2023</p>
+              <div class="tl-score"><strong>85.8%</strong></div>
             </div>
-            <h3>Continuous Learning</h3>
+          </div>
+          <div class="tl-item reveal">
+            <div class="tl-year">2021</div>
+            <div class="tl-dot"></div>
+            <div class="tl-card">
+              <h3>Class X — CBSE</h3>
+              <p><i class="fas fa-building"></i> Kendriya Vidyalaya Air Force Station &nbsp;·&nbsp; 2021</p>
+              <div class="tl-score"><strong>85%</strong></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ SKILLS ═══════════ -->
+    <section id="skills" class="section" aria-labelledby="skills-title">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">03 — Skills</span>
+          <h2 class="section-title" id="skills-title">Technical <em>Arsenal</em></h2>
+        </div>
+
+        <!-- Skill Filter -->
+        <div class="skill-filter reveal" role="tablist" aria-label="Filter skills">
+          <button class="sf-btn active" data-filter="all" role="tab" aria-selected="true">All</button>
+          <button class="sf-btn" data-filter="lang" role="tab" aria-selected="false">Languages</button>
+          <button class="sf-btn" data-filter="web" role="tab" aria-selected="false">Web</button>
+          <button class="sf-btn" data-filter="ml" role="tab" aria-selected="false">ML/AI</button>
+          <button class="sf-btn" data-filter="cloud" role="tab" aria-selected="false">Cloud</button>
+          <button class="sf-btn" data-filter="tools" role="tab" aria-selected="false">Tools</button>
+        </div>
+
+        <div class="skills-bento reveal">
+          <div class="sb primary-block">
+            <div class="sb-label">Core Languages</div>
+            <div class="sb-tags">
+              <span class="stag feat" data-cat="lang"><i class="fab fa-java"></i> Java</span>
+              <span class="stag feat" data-cat="lang"><i class="fab fa-python"></i> Python</span>
+            </div>
+            <div class="skill-bars">
+              <div class="skill-bar-row">
+                <span>Java</span>
+                <div class="skill-bar-track"><div class="skill-bar-fill" data-pct="88"></div></div>
+                <span>88%</span>
+              </div>
+              <div class="skill-bar-row">
+                <span>Python</span>
+                <div class="skill-bar-track"><div class="skill-bar-fill" data-pct="82"></div></div>
+                <span>82%</span>
+              </div>
+            </div>
+          </div>
+          <div class="sb">
+            <div class="sb-label">Web Stack</div>
+            <div class="sb-tags">
+              <span class="stag" data-cat="web"><i class="fab fa-html5"></i> HTML5</span>
+              <span class="stag" data-cat="web"><i class="fab fa-css3-alt"></i> CSS3</span>
+              <span class="stag" data-cat="web"><i class="fab fa-js"></i> JavaScript</span>
+              <span class="stag" data-cat="web">Django</span>
+            </div>
+          </div>
+          <div class="sb">
+            <div class="sb-label">Databases</div>
+            <div class="sb-tags">
+              <span class="stag" data-cat="tools"><i class="fas fa-database"></i> MySQL</span>
+              <span class="stag" data-cat="tools">Oracle SQL</span>
+              <span class="stag" data-cat="tools"><i class="fas fa-leaf"></i> MongoDB</span>
+            </div>
+          </div>
+          <div class="sb ml-block">
+            <div class="sb-label">ML / AI / Data Science</div>
+            <div class="sb-tags">
+              <span class="stag" data-cat="ml">Scikit-learn</span>
+              <span class="stag" data-cat="ml">Pandas</span>
+              <span class="stag" data-cat="ml">NumPy</span>
+              <span class="stag" data-cat="ml">Streamlit</span>
+              <span class="stag" data-cat="ml">NLP / TF-IDF</span>
+              <span class="stag" data-cat="ml">Matplotlib</span>
+            </div>
+          </div>
+          <div class="sb">
+            <div class="sb-label">Cloud &amp; DevOps</div>
+            <div class="sb-tags">
+              <span class="stag" data-cat="cloud"><i class="fab fa-aws"></i> AWS</span>
+              <span class="stag" data-cat="cloud">Oracle Cloud</span>
+              <span class="stag" data-cat="cloud">CI/CD</span>
+              <span class="stag" data-cat="cloud">Git</span>
+            </div>
+          </div>
+          <div class="sb">
+            <div class="sb-label">Tools</div>
+            <div class="sb-tags">
+              <span class="stag" data-cat="tools">VS Code</span>
+              <span class="stag" data-cat="tools">Eclipse</span>
+              <span class="stag" data-cat="tools">Android Studio</span>
+              <span class="stag" data-cat="tools">Jupyter</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+<!-- ═══════════ PROJECTS ═══════════ -->
+    <section id="projects" class="section alt-bg" aria-labelledby="proj-title">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">04 — Projects</span>
+          <h2 class="section-title" id="proj-title">Featured <em>Work</em></h2>
+        </div>
+
+        <!-- Project Filter -->
+        <div class="proj-filter reveal" role="tablist" aria-label="Filter projects">
+          <button class="pf-btn active" data-pf="all" role="tab">All</button>
+          <button class="pf-btn" data-pf="java" role="tab">Java</button>
+          <button class="pf-btn" data-pf="ml" role="tab">ML/AI</button>
+          <button class="pf-btn" data-pf="python" role="tab">Python</button>
+          <button class="pf-btn" data-pf="intern" role="tab">Internship</button>
+        </div>
+
+        <div class="projects-grid" id="projectsGrid">
+
+          <div class="project-card tilt-card reveal" data-tags="java" data-project="banking-system">
+            <div class="card-inner">
+              <div class="card-front">
+                <div class="pc-header">
+                  <div class="pc-icon j1"><i class="fas fa-university"></i></div>
+                  <div class="pc-meta">
+                    <span class="pc-year">2026</span>
+                    <span class="pc-type">Desktop App</span>
+                  </div>
+                </div>
+                <h3>Professional Banking System</h3>
+                <p class="pc-tech">Java 24 · Swing · OOP · Serialization</p>
+                <ul class="pc-list">
+                  <li>5-tab enterprise dashboard in Java Swing</li>
+                  <li>PIN security + .dat file persistence</li>
+                  <li>Full CRUD: Accounts, Deposit, Withdraw, Admin</li>
+                  <li>Account freezing, transaction history, live stats</li>
+                </ul>
+                <div class="pc-hover-hint">Hover to flip ↻</div>
+              </div>
+              <div class="card-back">
+                <h3>Banking System</h3>
+                <div class="card-back-tech">
+                  <span>Java 24</span><span>Swing</span><span>OOP</span><span>Serialization</span><span>File I/O</span>
+                </div>
+                <p>Production-quality desktop app demonstrating enterprise Java patterns, event-driven GUI programming, and robust data persistence.</p>
+                <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;">
+                  <a href="https://github.com/Ashwin-2006-t/Professional-Banking-GUI.git" target="_blank" class="cb-btn">GitHub ↗</a>
+                  <button class="cb-btn cb-btn2" onclick="openProjectModal('banking-system')">Details</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-card tilt-card reveal featured-card" data-tags="ml python intern" data-project="infosys-job-detection">
+            <div class="card-inner">
+              <div class="card-front">
+                <div class="pc-header">
+                  <div class="pc-icon j2"><i class="fas fa-shield-alt"></i></div>
+                  <div class="pc-meta">
+                    <span class="pc-year">2025</span>
+                    <span class="pc-type intern-type">Infosys Internship</span>
+                  </div>
+                </div>
+                <h3>HireShield — Fake Job Detection</h3>
+                <p class="pc-tech">Python · ML · NLP · Scikit-learn · Streamlit</p>
+                <div class="pc-badges"><span class="pcb">92% Accuracy</span><span class="pcb">10K+ Records</span></div>
+                <ul class="pc-list">
+                  <li>92% accuracy ML fraud detection model</li>
+                  <li>Full NLP pipeline: tokenization → vectors</li>
+                  <li>Interactive Streamlit dashboard</li>
+                </ul>
+                <div class="pc-hover-hint">Hover to flip ↻</div>
+              </div>
+              <div class="card-back">
+                <h3>HireShield</h3>
+                <div class="card-back-tech">
+                  <span>Python</span><span>Scikit-learn</span><span>NLP</span><span>TF-IDF</span><span>Streamlit</span>
+                </div>
+                <p>Built during Infosys internship. End-to-end ML system processing 10K+ job postings with 92% precision using ensemble classifiers and NLP feature extraction.</p>
+                <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;">
+                  <a href="https://github.com/Ashwin-2006-t/fake-job-detection-individual.git" target="_blank" class="cb-btn">GitHub ↗</a>
+                  <button class="cb-btn cb-btn2" onclick="openProjectModal('infosys-job-detection')">Details</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-card tilt-card reveal" data-tags="ml python" data-project="ev-forecasting">
+            <div class="card-inner">
+              <div class="card-front">
+                <div class="pc-header">
+                  <div class="pc-icon j3"><i class="fas fa-charging-station"></i></div>
+                  <div class="pc-meta"><span class="pc-year">2025</span><span class="pc-type">ML / Data</span></div>
+                </div>
+                <h3>EV Adoption Forecasting</h3>
+                <p class="pc-tech">Python · Streamlit · Machine Learning</p>
+                <ul class="pc-list">
+                  <li>Feature engineering &amp; data preprocessing</li>
+                  <li>Time-series regression (85% accuracy)</li>
+                  <li>Interactive Streamlit visualizations</li>
+                </ul>
+                <div class="pc-hover-hint">Hover to flip ↻</div>
+              </div>
+              <div class="card-back">
+                <h3>EV Forecasting</h3>
+                <div class="card-back-tech">
+                  <span>Python</span><span>Pandas</span><span>Scikit-learn</span><span>Streamlit</span>
+                </div>
+                <p>EV market growth forecasting with 15+ engineered features, time-series regression modelling, and interactive scenario simulation dashboard.</p>
+                <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;">
+                  <a href="https://github.com/Ashwin-2006-t/EV_Forecasting.git" target="_blank" class="cb-btn">GitHub ↗</a>
+                  <button class="cb-btn cb-btn2" onclick="openProjectModal('ev-forecasting')">Details</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-card tilt-card reveal" data-tags="python" data-project="steganography">
+            <div class="card-inner">
+              <div class="card-front">
+                <div class="pc-header">
+                  <div class="pc-icon j4"><i class="fas fa-lock"></i></div>
+                  <div class="pc-meta"><span class="pc-year">2024</span><span class="pc-type">Security</span></div>
+                </div>
+                <h3>Steganography Tool</h3>
+                <p class="pc-tech">Python · Image Processing · LSB Encoding</p>
+                <ul class="pc-list">
+                  <li>LSB steganography encode/decode CLI</li>
+                  <li>Multi-format image support (PNG/BMP/JPEG)</li>
+                  <li>Minimal perceptual distortion</li>
+                </ul>
+                <div class="pc-hover-hint">Hover to flip ↻</div>
+              </div>
+              <div class="card-back">
+                <h3>Steganography</h3>
+                <div class="card-back-tech">
+                  <span>Python</span><span>Pillow</span><span>NumPy</span><span>LSB</span>
+                </div>
+                <p>Secure data hiding inside images using Least Significant Bit encoding. Full CLI with encode/decode pipelines, format detection, and integrity verification.</p>
+                <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;">
+                  <a href="https://github.com/Ashwin-2006-t/-steganography.git" target="_blank" class="cb-btn">GitHub ↗</a>
+                  <button class="cb-btn cb-btn2" onclick="openProjectModal('steganography')">Details</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+<!-- ═══════════ EXPERIENCE ═══════════ -->
+    <section id="experience" class="section" aria-labelledby="exp-title">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">05 — Experience</span>
+          <h2 class="section-title" id="exp-title">Internship <em>Experience</em></h2>
+        </div>
+        <div class="experience-grid">
+
+          <div class="exp-card featured reveal">
+            <div class="exp-top">
+              <div class="exp-logo-wrap e1"><i class="fas fa-laptop-code"></i></div>
+              <div class="exp-info">
+                <div class="exp-co">Infosys</div>
+                <div class="exp-dur"><i class="far fa-clock"></i> 8 Weeks</div>
+              </div>
+              <span class="exp-feat-badge">Featured</span>
+            </div>
+            <h3 class="exp-role">Python Full Stack Developer Intern</h3>
+            <p class="exp-proj"><i class="fas fa-folder"></i> HireShield — Fake Job Detection</p>
+            <ul class="exp-list">
+              <li>Built REST APIs with Django/Flask</li>
+              <li>Full-stack: Python + PostgreSQL production system</li>
+              <li>Implemented CI/CD pipelines &amp; deployment</li>
+              <li>Agile team collaboration on live features</li>
+            </ul>
+            <a href="certificates/internship/infosys-internship-certificate.pdf" target="_blank" class="exp-cert-link"><i class="fas fa-certificate"></i> View Certificate</a>
+          </div>
+
+          <div class="exp-card featured reveal">
+            <div class="exp-top">
+              <div class="exp-logo-wrap e2"><i class="fas fa-code"></i></div>
+              <div class="exp-info">
+                <div class="exp-co">CodeBind</div>
+                <div class="exp-dur"><i class="far fa-clock"></i> 2 Weeks</div>
+              </div>
+            </div>
+            <h3 class="exp-role">Web Dev &amp; Business Management Intern</h3>
+            <ul class="exp-list">
+              <li>Full-stack web development projects</li>
+              <li>Agile methodologies &amp; business management</li>
+              <li>Client-facing web app deployment</li>
+              <li>Modern JS frameworks training</li>
+            </ul>
+            <button class="exp-cert-link" onclick="openExperienceModal('codebind')"><i class="fas fa-certificate"></i> View 5 Certificates</button>
+          </div>
+
+          <div class="exp-card reveal">
+            <div class="exp-top">
+              <div class="exp-logo-wrap e3"><i class="fas fa-shield-alt"></i></div>
+              <div class="exp-info">
+                <div class="exp-co">Edunet Foundation &amp; AICTE</div>
+                <div class="exp-dur"><i class="far fa-clock"></i> 6 Weeks</div>
+              </div>
+            </div>
+            <h3 class="exp-role">Cybersecurity Intern</h3>
+            <ul class="exp-list">
+              <li>AICTE-approved cybersecurity specialization</li>
+              <li>Threat detection &amp; vulnerability assessment</li>
+              <li>Secure AI application development</li>
+            </ul>
+            <a href="certificates/internship/steganography-internship-cert.jpg" target="_blank" class="exp-cert-link"><i class="fas fa-certificate"></i> View Certificate</a>
+          </div>
+
+          <div class="exp-card reveal">
+            <div class="exp-top">
+              <div class="exp-logo-wrap e4"><i class="fas fa-charging-station"></i></div>
+              <div class="exp-info">
+                <div class="exp-co">EV Forecasting Internship</div>
+                <div class="exp-dur"><i class="far fa-clock"></i> 2025</div>
+              </div>
+            </div>
+            <h3 class="exp-role">ML/Data Science Intern</h3>
+            <p class="exp-proj"><i class="fas fa-folder"></i> EV Adoption Forecasting</p>
+            <ul class="exp-list">
+              <li>15+ engineered features from raw EV market data</li>
+              <li>Time-series regression achieving 85% accuracy</li>
+              <li>Interactive Streamlit dashboard with scenario sliders</li>
+              <li>Market growth trend analysis across geographies</li>
+            </ul>
+            <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+              <a href="certificates/internship/ev-project-internship-cert.jpg" target="_blank" class="exp-cert-link"><i class="fas fa-certificate"></i>View Certificate</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+   
+    <!-- ═══════════ CERTIFICATIONS ═══════════ -->
+    <section id="certifications" class="section" aria-labelledby="cert-title">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">07 — Certifications</span>
+          <h2 class="section-title" id="cert-title">Credentials &amp; <em>Certifications</em></h2>
+        </div>
+        <div class="certs-grid">
+          <div class="cert-card reveal clickable" onclick="openCertModal('infosys-java')">
+            <div class="cc-icon java-ic"><i class="fab fa-java"></i></div>
+            <div class="cc-info"><h3>Java Developer Certification</h3><p>Infosys</p></div>
+            <span class="cc-arrow">↗</span>
+          </div>
+          <div class="cert-card reveal clickable" onclick="openCertModal('google-analytics')">
+            <div class="cc-icon goog-ic"><i class="fab fa-google"></i></div>
+            <div class="cc-info"><h3>Google Analytics</h3><p>Google</p></div>
+            <span class="cc-arrow">↗</span>
+          </div>
+          <div class="cert-card reveal clickable" onclick="openCertModal('aws-cloud')">
+            <div class="cc-icon aws-ic"><i class="fab fa-aws"></i></div>
+            <div class="cc-info"><h3>AWS Cloud Support Associate</h3><p>Amazon Web Services</p></div>
+            <span class="cc-arrow">↗</span>
+          </div>
+          <div class="cert-card reveal clickable bundle" onclick="openCertModal('infosys-bundle')">
+            <div class="cc-icon bund-ic"><i class="fas fa-briefcase"></i></div>
+            <div class="cc-info"><h3>Infosys Certifications</h3><p>Infosys Limited</p><span class="cc-count">17 Domains</span></div>
+            <span class="cc-arrow">↗</span>
+          </div>
+          <div class="cert-card reveal clickable bundle" onclick="openCertModal('ibm-edunet')">
+            <div class="cc-icon ibm-ic"><i class="fas fa-graduation-cap"></i></div>
+            <div class="cc-info"><h3>IBM &amp; Edunet Certifications</h3><p>IBM via Edunet Foundation</p><span class="cc-count">15 Certs</span></div>
+            <span class="cc-arrow">↗</span>
+          </div>
+          <div class="cert-card reveal clickable" onclick="openCertModal('fullstack')">
+            <div class="cc-icon fs-ic"><i class="fas fa-layer-group"></i></div>
+            <div class="cc-info"><h3>Diploma in Full Stack Dev</h3><p>CASS Academy</p><span class="cc-grade">Grade: A (83%)</span></div>
+            <span class="cc-arrow">↗</span>
+          </div>
+          <div class="cert-card reveal clickable" onclick="openCertModal('oracle-cloud')">
+            <div class="cc-icon ora-ic"><i class="fas fa-cloud"></i></div>
+            <div class="cc-info"><h3>Oracle Cloud Infrastructure</h3><p>Oracle</p></div>
+            <span class="cc-arrow">↗</span>
+          </div>
+          <div class="cert-card reveal clickable" onclick="openCertModal('fusion-ai')">
+            <div class="cc-icon ai-ic"><i class="fas fa-robot"></i></div>
+            <div class="cc-info"><h3>Fusion AI Foundations</h3><p>Oracle</p></div>
+            <span class="cc-arrow">↗</span>
+          </div>
+          <div class="cert-card reveal clickable" onclick="openCertModal('machine-learning')">
+            <div class="cc-icon nptel-ic"><i class="fas fa-brain"></i></div>
+            <div class="cc-info"><h3>Introduction to Machine Learning</h3><p>NPTEL, IIT Kharagpur</p></div>
+            <span class="cc-arrow">↗</span>
+          </div>
+          <div class="cert-card reveal clickable" onclick="openCertModal('servicenow-csa')">
+            <div class="cc-icon snow-ic"><i class="fas fa-tools"></i></div>
+            <div class="cc-info"><h3>ServiceNow CSA</h3><p>ServiceNow</p></div>
+            <span class="cc-arrow">↗</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ CONTACT CTA ═══════════ -->
+    <section class="section contact-section" aria-labelledby="contact-title">
+      <div class="container">
+        <div class="cta-card reveal">
+          <div class="cta-glow"></div>
+          <div class="cta-label">Open to Opportunities</div>
+          <h2 class="cta-h" id="contact-title">Let's build something <em>great</em> together.</h2>
+          <p>Currently seeking entry-level roles in Java development, full-stack, or ML engineering at top-tier companies. Fresh perspective. Production experience. Zero ego.</p>
+          <div class="cta-actions">
+            <a href="mailto:ashwin2006t@gmail.com" class="btn-primary magnetic">
+              <i class="fas fa-envelope"></i> Send Email <span class="btn-shine"></span>
+            </a>
+            <a href="https://linkedin.com/in/ashwin2006" target="_blank" rel="noopener" class="btn-ghost magnetic">
+              <i class="fab fa-linkedin-in"></i> LinkedIn
+            </a>
+            <button class="btn-ghost magnetic" onclick="openTerminal()">
+              <i class="fas fa-terminal"></i> Chat with Terminal
+            </button>
           </div>
         </div>
       </div>
@@ -447,21 +743,32 @@
 
   </main>
 
-  <footer>
+<!-- ═══════════ FOOTER ═══════════ -->
+  <footer role="contentinfo">
     <div class="container">
-      <div class="social-links">
-        <a href="mailto:ashwin2006t@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
-        <a href="https://linkedin.com/in/ashwin2006" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-        <a href="https://github.com/Ashwin-2006-t" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fab fa-github"></i></a>
+      <div class="footer-inner">
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <p>© 2026 Ashwin T · Chennai, Tamil Nadu · Built with ❤️ &amp; ☕</p>
+        <div class="footer-socials">
+          <a href="mailto:ashwin2006t@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
+          <a href="https://linkedin.com/in/ashwin2006" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
+          <a href="https://github.com/Ashwin-2006-t" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+        </div>
       </div>
-      <p>© 2026 Ashwin T • Chennai, Tamil Nadu</p>
+      <p class="footer-hint">
+        <i class="fas fa-keyboard"></i>
+        Try: <kbd>⌘K</kbd> Command Palette · <kbd>T</kbd> Terminal · <kbd>↑↑↓↓←→←→BA</kbd> Easter egg
+      </p>
     </div>
   </footer>
 
-  <!-- Modal for viewing details -->
-  <div id="detailModal" class="modal">
+
+
+  <!-- ═══════════ MODAL ═══════════ -->
+  <div id="detailModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-backdrop" onclick="closeModal()"></div>
     <div class="modal-content">
-      <span class="modal-close" onclick="closeModal()">&times;</span>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="fas fa-times"></i></button>
       <h2 id="modalTitle"></h2>
       <div id="modalBody"></div>
     </div>
