@@ -1028,20 +1028,56 @@ function initSmoothScroll() {
 function initNavMobile() {
   const hamburger = $('navHamburger');
   const menu = $('navMenu');
+  const body = document.body;
+  
   if (!hamburger || !menu) return;
-  hamburger.addEventListener('click', () => {
-    const open = menu.classList.toggle('mobile-open');
-    hamburger.setAttribute('aria-expanded', open);
-    document.body.style.overflow = open ? 'hidden' : '';
+
+  // Hamburger click/touch
+  function toggleMenu() {
+    const isOpen = menu.classList.toggle('mobile-open');
+    hamburger.setAttribute('aria-expanded', isOpen);
+    body.style.overflow = isOpen ? 'hidden' : '';
+    playSound?.('click');
+  }
+
+  hamburger.addEventListener('click', toggleMenu);
+  hamburger.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    toggleMenu();
   });
-  $$('.nav-link').forEach(a => {
-    a.addEventListener('click', () => {
+
+  // Close on nav link click
+  $$('.nav-link').forEach(link => {
+    link.addEventListener('click', () => {
       menu.classList.remove('mobile-open');
-      hamburger.setAttribute('aria-expanded','false');
-      document.body.style.overflow = '';
+      hamburger.setAttribute('aria-expanded', 'false');
+      body.style.overflow = '';
+    });
+    link.addEventListener('touchend', (e) => {
+      e.preventDefault();
+      link.click(); // Trigger the click handler
     });
   });
+
+  // Close on overlay click (outside menu)
+  menu.addEventListener('click', (e) => {
+    if (e.target === menu) {
+      menu.classList.remove('mobile-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      body.style.overflow = '';
+    }
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu.classList.contains('mobile-open')) {
+      menu.classList.remove('mobile-open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      body.style.overflow = '';
+    }
+  });
 }
+
 
 /* ══════════════════════════════════════════════════════════
    MODAL SYSTEM
