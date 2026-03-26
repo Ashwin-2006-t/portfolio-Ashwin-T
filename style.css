@@ -1,4 +1,4 @@
-/* ══════════════════════════════════════════════════════════════
+/* /* ══════════════════════════════════════════════════════════════
    ASHWIN T — ULTIMATE ENTERPRISE PORTFOLIO CSS
    Aesthetic: Cinematic dark tech — luxury editorial meets system UI
    Fonts: Syne (display) + DM Mono (code/accent) + DM Sans (body)
@@ -1105,6 +1105,118 @@ kbd {
 .m-cert-img { width:100%; border-radius:var(--r); margin-bottom:1.25rem; display:block; }
 .m-cert-iframe { width:100%; height:460px; border-radius:var(--r); border:1px solid var(--border); margin-bottom:1.25rem; }
 
+/* ─── PROJECT ICON j5 ────────────────────────────────────── */
+.j5 { background:rgba(6,182,212,.1); color:var(--cyan); }
+
+/* ─── CONTACT FORM ──────────────────────────────────────── */
+.contact-form-wrap {
+  display:grid; grid-template-columns:1fr 1.2fr; gap:0;
+  border-radius:var(--r-xl); overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:var(--shadow-lg);
+}
+.cf-info {
+  background:linear-gradient(135deg, var(--card) 0%, rgba(34,197,94,.06) 100%);
+  border-right:1px solid var(--border);
+  position:relative; overflow:hidden;
+}
+.cf-info-inner { position:relative; z-index:1; padding:3rem 2.5rem; }
+.cf-info-glow {
+  position:absolute; top:20%; left:-30%;
+  width:300px; height:300px;
+  background:radial-gradient(circle, rgba(34,197,94,.12), transparent 70%);
+  pointer-events:none; z-index:0;
+}
+.cf-info-title {
+  font-family:var(--fh); font-size:1.6rem; font-weight:800;
+  margin-bottom:.75rem; color:var(--text);
+}
+.cf-info-text {
+  font-size:.92rem; color:var(--text2); line-height:1.8;
+  margin-bottom:2rem;
+}
+.cf-info-items { display:flex; flex-direction:column; gap:1.25rem; margin-bottom:2.5rem; }
+.cf-info-item {
+  display:flex; align-items:flex-start; gap:1rem;
+  padding:1rem 1.2rem; background:rgba(255,255,255,.02);
+  border:1px solid var(--border); border-radius:var(--r);
+  transition:all .3s var(--ease);
+}
+.cf-info-item:hover { border-color:var(--border2); transform:translateX(4px); }
+.cf-ii-icon {
+  width:38px; height:38px; border-radius:var(--r-sm);
+  background:rgba(34,197,94,.1); color:var(--green);
+  display:flex; align-items:center; justify-content:center;
+  font-size:.85rem; flex-shrink:0;
+}
+.cf-ii-label {
+  font-family:var(--fm); font-size:.68rem; font-weight:600;
+  color:var(--text3); text-transform:uppercase; letter-spacing:.08em;
+  margin-bottom:.15rem;
+}
+.cf-ii-val {
+  font-size:.88rem; font-weight:600; color:var(--text);
+  text-decoration:none;
+}
+a.cf-ii-val:hover { color:var(--green); }
+.cf-info-socials { display:flex; gap:.65rem; }
+.cf-info-socials a {
+  width:40px; height:40px; border-radius:var(--r-sm);
+  background:var(--card2); border:1px solid var(--border);
+  color:var(--text2); display:flex; align-items:center; justify-content:center;
+  font-size:.9rem; text-decoration:none;
+  transition:all .35s var(--ease-spring);
+}
+.cf-info-socials a:hover {
+  background:var(--green); color:#000; transform:translateY(-3px);
+  box-shadow:0 8px 20px rgba(34,197,94,.3);
+}
+
+/* Form Side */
+.cf-form-side {
+  background:var(--card); padding:3rem 2.5rem;
+}
+.cf-group { display:flex; flex-direction:column; gap:.5rem; margin-bottom:1.25rem; }
+.cf-label {
+  font-family:var(--fm); font-size:.72rem; font-weight:600;
+  color:var(--text3); text-transform:uppercase; letter-spacing:.08em;
+  display:flex; align-items:center; gap:.4rem;
+}
+.cf-label i { color:var(--green); font-size:.65rem; }
+.cf-field {
+  background:var(--card2); border:1px solid var(--border);
+  border-radius:var(--r-sm); padding:.9rem 1.1rem;
+  color:var(--text); font-family:var(--fb); font-size:.92rem;
+  outline:none; transition:all .3s var(--ease);
+  width:100%; box-sizing:border-box;
+}
+.cf-field::placeholder { color:var(--text3); }
+.cf-field:focus {
+  border-color:var(--green);
+  box-shadow:0 0 0 3px rgba(34,197,94,.12);
+  background:rgba(34,197,94,.02);
+}
+.cf-textarea { resize:vertical; min-height:130px; line-height:1.7; font-family:var(--fb); }
+.cf-submit {
+  display:inline-flex; align-items:center; gap:.6rem;
+  background:var(--green); color:#000;
+  font-family:var(--fb); font-size:.95rem; font-weight:700;
+  padding:.95rem 2.4rem; border-radius:var(--r-sm);
+  border:none; cursor:pointer; position:relative; overflow:hidden;
+  transition:all .35s var(--ease-spring);
+  box-shadow:0 8px 28px rgba(34,197,94,.3);
+  margin-top:.5rem; width:100%;
+  justify-content:center;
+}
+.cf-submit:hover { transform:translateY(-3px); box-shadow:0 16px 48px rgba(34,197,94,.45); }
+.cf-submit:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+.cf-status {
+  margin-top:1rem; font-size:.85rem; font-weight:600;
+  font-family:var(--fm); min-height:1.4em; text-align:center;
+}
+.cf-status.success { color:var(--green); }
+.cf-status.error { color:#ef4444; }
+
 /* ─── RESPONSIVE ─────────────────────────────────────────── */
 @media (max-width:1100px) {
   .hero-main { grid-template-columns:1fr 340px; gap:3rem; }
@@ -1161,6 +1273,10 @@ kbd {
   .skills-bento { grid-template-columns:1fr; }
   .primary-block,.ml-block { grid-column:auto; }
   .cta-card { padding:3rem 1.75rem; }
+  .contact-form-wrap { grid-template-columns:1fr; }
+  .cf-info { border-right:none; border-bottom:1px solid var(--border); }
+  .cf-info-inner { padding:2rem 1.5rem; }
+  .cf-form-side { padding:2rem 1.5rem; }
   .footer-inner { flex-direction:column; text-align:center; }
   .timeline::before { left:60px; }
   .tl-item { grid-template-columns:60px 16px 1fr; }
@@ -1220,4 +1336,4 @@ kbd {
   .nav-menu {
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
-}
+} 

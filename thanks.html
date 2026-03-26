@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Message Sent — Ashwin T</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --bg:#030712; --surface:#0a0f1a; --card:rgba(15,23,42,.65);
+      --border:rgba(148,163,184,.08); --border2:rgba(148,163,184,.15);
+      --green:#22c55e; --text:#e2e8f0; --text2:#8b9fc0; --text3:#475569;
+      --fh:'Syne',sans-serif; --fb:'DM Sans',sans-serif; --fm:'DM Mono',monospace;
+      --r-xl:20px; --r-sm:10px;
+    }
+
+    body {
+      background:var(--bg); color:var(--text); font-family:var(--fb);
+      min-height:100vh; display:flex; align-items:center; justify-content:center;
+      overflow:hidden; position:relative;
+    }
+
+    /* Animated background */
+    .bg-glow {
+      position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+      width:800px; height:800px;
+      background:radial-gradient(circle, rgba(34,197,94,.06) 0%, transparent 70%);
+      pointer-events:none; z-index:0;
+      animation:breathe 6s ease-in-out infinite;
+    }
+    @keyframes breathe {
+      0%,100% { transform:translate(-50%,-50%) scale(1); opacity:.6; }
+      50% { transform:translate(-50%,-50%) scale(1.15); opacity:1; }
+    }
+
+    /* Floating particles */
+    .particles { position:fixed; inset:0; z-index:0; pointer-events:none; }
+    .particle {
+      position:absolute; width:2px; height:2px; background:var(--green);
+      border-radius:50%; opacity:0; animation:float-up linear infinite;
+    }
+    @keyframes float-up {
+      0%  { transform:translateY(100vh) scale(0); opacity:0; }
+      20% { opacity:.6; }
+      80% { opacity:.3; }
+      100%{ transform:translateY(-10vh) scale(1); opacity:0; }
+    }
+
+    .card {
+      position:relative; z-index:1;
+      background:var(--card); border:1px solid var(--border);
+      border-radius:var(--r-xl); padding:4rem 3.5rem;
+      text-align:center; max-width:560px; width:90%;
+      backdrop-filter:blur(20px);
+      box-shadow:0 25px 80px rgba(0,0,0,.4), 0 0 120px rgba(34,197,94,.04);
+      animation:cardIn .8s cubic-bezier(.16,1,.3,1) both;
+    }
+    @keyframes cardIn {
+      from { opacity:0; transform:scale(.92) translateY(30px); }
+      to   { opacity:1; transform:scale(1) translateY(0); }
+    }
+
+    .check-wrap {
+      width:90px; height:90px; margin:0 auto 2rem;
+      background:rgba(34,197,94,.1); border:2px solid rgba(34,197,94,.25);
+      border-radius:50%; display:flex; align-items:center; justify-content:center;
+      animation:popIn .6s cubic-bezier(.16,1,.3,1) .3s both;
+    }
+    @keyframes popIn {
+      from { opacity:0; transform:scale(.5); }
+      to   { opacity:1; transform:scale(1); }
+    }
+    .check-wrap i {
+      font-size:2.2rem; color:var(--green);
+      animation:drawCheck .5s ease .7s both;
+    }
+    @keyframes drawCheck {
+      from { opacity:0; transform:scale(.3) rotate(-20deg); }
+      to   { opacity:1; transform:scale(1) rotate(0); }
+    }
+
+    h1 {
+      font-family:var(--fh); font-size:clamp(1.5rem, 4vw, 2.2rem);
+      font-weight:800; margin-bottom:.75rem; letter-spacing:-.02em;
+      animation:fadeUp .6s ease .5s both;
+    }
+    h1 em { color:var(--green); font-style:normal; }
+
+    .subtitle {
+      color:var(--text2); font-size:1rem; line-height:1.8;
+      max-width:400px; margin:0 auto 2.5rem;
+      animation:fadeUp .6s ease .65s both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(15px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    .actions {
+      display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;
+      animation:fadeUp .6s ease .8s both;
+    }
+
+    .btn {
+      display:inline-flex; align-items:center; gap:.5rem;
+      padding:.85rem 2rem; border-radius:var(--r-sm);
+      font-family:var(--fb); font-size:.92rem; font-weight:700;
+      text-decoration:none; cursor:pointer; border:none;
+      transition:all .35s cubic-bezier(.34,1.56,.64,1);
+    }
+    .btn-primary {
+      background:var(--green); color:#000;
+      box-shadow:0 8px 28px rgba(34,197,94,.3);
+    }
+    .btn-primary:hover {
+      transform:translateY(-3px);
+      box-shadow:0 16px 48px rgba(34,197,94,.45);
+    }
+    .btn-ghost {
+      background:transparent; color:var(--text);
+      border:1px solid var(--border2);
+    }
+    .btn-ghost:hover {
+      border-color:var(--green); color:var(--green);
+      transform:translateY(-3px);
+    }
+
+    .timer {
+      margin-top:2rem; font-family:var(--fm); font-size:.78rem;
+      color:var(--text3); animation:fadeUp .6s ease 1s both;
+    }
+    .timer span { color:var(--green); font-weight:600; }
+
+    @media (max-width:480px) {
+      .card { padding:3rem 1.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-glow"></div>
+
+  <div class="particles" id="particles"></div>
+
+  <div class="card">
+    <div class="check-wrap">
+      <i class="fas fa-check"></i>
+    </div>
+    <h1>Message <em>Sent!</em></h1>
+    <p class="subtitle">Thank you for reaching out! I'll review your message and get back to you within 24 hours.</p>
+    <div class="actions">
+      <a href="index.html" class="btn btn-primary">
+        <i class="fas fa-arrow-left"></i> Back to Portfolio
+      </a>
+      <a href="mailto:ashwin2006t@gmail.com" class="btn btn-ghost">
+        <i class="fas fa-envelope"></i> Send Another Email
+      </a>
+    </div>
+    <div class="timer">Redirecting in <span id="countdown">10</span> seconds...</div>
+  </div>
+
+  <script>
+    // Auto redirect countdown
+    let count = 10;
+    const el = document.getElementById('countdown');
+    const timer = setInterval(() => {
+      count--;
+      el.textContent = count;
+      if (count <= 0) {
+        clearInterval(timer);
+        window.location.href = 'index.html';
+      }
+    }, 1000);
+
+    // Generate particles
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (4 + Math.random() * 8) + 's';
+      p.style.animationDelay = Math.random() * 5 + 's';
+      p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
+      container.appendChild(p);
+    }
+  </script>
+
+</body>
+</html>

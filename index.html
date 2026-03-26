@@ -1,34 +1,39 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
-  <meta name="color-scheme" content="dark light"/>
-  <meta name="theme-color" content="#080c14"/>
-  <meta name="description" content="Ashwin T — Aspiring Java Developer & ML Engineer. Final-year CSE student. CGPA 9.2. Open to FAANG opportunities."/>
-  <meta property="og:title" content="Ashwin T — Java Developer"/>
-  <meta property="og:description" content="Principal-level portfolio: Java, Python, ML, Full Stack. Infosys Intern. 9.2 CGPA."/>
-  <meta name="twitter:card" content="summary_large_image"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no" />
+  <meta name="color-scheme" content="dark light" />
+  <meta name="theme-color" content="#080c14" />
+  <meta name="description"
+    content="Ashwin T — Aspiring Java Developer & ML Engineer. Final-year CSE student. CGPA 9.2. Open to FAANG opportunities." />
+  <meta property="og:title" content="Ashwin T — Java Developer" />
+  <meta property="og:description"
+    content="Principal-level portfolio: Java, Python, ML, Full Stack. Infosys Intern. 9.2 CGPA." />
+  <meta name="twitter:card" content="summary_large_image" />
 
   <title>Ashwin T — Java Developer</title>
 
   <!-- PWA Manifest inline -->
-  <link rel="manifest" href="manifest.json"/>
-  <meta name="mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <link rel="manifest" href="manifest.json" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
   <!-- Critical font preload -->
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:opsz,wght@9..40,300;9..40,500;9..40,600&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
   <!-- GSAP + Three.js + ScrollTrigger from CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 
-  <link rel="stylesheet" href="style.css"/>
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body data-theme="dark">
@@ -37,7 +42,9 @@
   <div id="loadScreen" aria-hidden="true">
     <div class="load-inner">
       <div class="load-logo">Ashwin T</div>
-      <div class="load-bar-track"><div class="load-bar" id="loadBar"></div></div>
+      <div class="load-bar-track">
+        <div class="load-bar" id="loadBar"></div>
+      </div>
       <div class="load-status" id="loadStatus">Initializing...</div>
     </div>
   </div>
@@ -70,7 +77,8 @@
     <div class="terminal-body" id="termBody"></div>
     <div class="terminal-input-row">
       <span class="term-prompt">❯</span>
-      <input type="text" id="termInput" placeholder="Type 'help' for commands..." autocomplete="off" spellcheck="false"/>
+      <input type="text" id="termInput" placeholder="Type 'help' for commands..." autocomplete="off"
+        spellcheck="false" />
     </div>
   </div>
 
@@ -79,7 +87,7 @@
     <div class="cmd-inner">
       <div class="cmd-search-row">
         <i class="fas fa-search"></i>
-        <input type="text" id="cmdInput" placeholder="Type a command or search..." autocomplete="off"/>
+        <input type="text" id="cmdInput" placeholder="Type a command or search..." autocomplete="off" />
         <span class="cmd-kbd">ESC</span>
       </div>
       <div class="cmd-list" id="cmdList"></div>
@@ -114,7 +122,7 @@
     <div class="container">
       <!-- NAV -->
       <nav class="hero-nav" role="navigation" aria-label="Main navigation">
-   
+
         <div class="nav-menu" id="navMenu">
           <a href="#objective" class="nav-link">About</a>
           <a href="#education" class="nav-link">Education</a>
@@ -122,6 +130,7 @@
           <a href="#projects" class="nav-link">Projects</a>
           <a href="#experience" class="nav-link">Experience</a>
           <a href="#certifications" class="nav-link">Certs</a>
+          <a href="#contact-form" class="nav-link">Contact</a>
         </div>
         <div class="nav-right">
           <div class="nav-status">
@@ -172,7 +181,7 @@
               <span class="hstat-l">Certifications</span>
             </div>
             <div class="hstat-div"></div>
-            <div class="hstat" data-target="4">
+            <div class="hstat" data-target="5">
               <span class="hstat-n">0</span>
               <span class="hstat-l">Projects</span>
             </div>
@@ -181,22 +190,29 @@
               <span class="hstat-n">0</span>
               <span class="hstat-l">Internships</span>
             </div>
-            
+
           </div>
 
           <!-- SOCIAL -->
           <div class="social-hero" id="heroSocial">
-            <a href="mailto:ashwin2006t@gmail.com" class="social-link email" title="Email" aria-label="Email"><i class="fas fa-envelope"></i></a>
-            <a href="https://linkedin.com/in/ashwin2006" class="social-link linkedin" target="_blank" rel="noopener" title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-            <a href="https://github.com/Ashwin-2006-t" class="social-link github" target="_blank" rel="noopener" title="GitHub" aria-label="GitHub"><i class="fab fa-github"></i></a>
-            <a href="https://leetcode.com/u/Ashwin_2006_T/" class="social-link leetcode" target="_blank" rel="noopener" title="LeetCode" aria-label="LeetCode"><i class="fas fa-code"></i></a>
-            <a href="https://www.hackerrank.com/profile/ashwin2006t" class="social-link hackerrank" target="_blank" rel="noopener" title="HackerRank" aria-label="HackerRank"><i class="fas fa-lightbulb"></i></a>
-            <a href="https://www.hackerearth.com/@ashwin2006t/" class="social-link hackerearth" target="_blank" rel="noopener" title="HackerEarth" aria-label="HackerEarth"><i class="fas fa-brain"></i></a>
-          <a href="https://www.credly.com/users/ashwin-t.a5d11353" class="social-link credly" target="_blank" rel="noopener" title="Credly" aria-label="17+ Credly Badges">
-  <i class="fas fa-certificate"></i>
-</a>
+            <a href="mailto:ashwin2006t@gmail.com" class="social-link email" title="Email" aria-label="Email"><i
+                class="fas fa-envelope"></i></a>
+            <a href="https://linkedin.com/in/ashwin2006" class="social-link linkedin" target="_blank" rel="noopener"
+              title="LinkedIn" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/Ashwin-2006-t" class="social-link github" target="_blank" rel="noopener"
+              title="GitHub" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://leetcode.com/u/Ashwin_2006_T/" class="social-link leetcode" target="_blank" rel="noopener"
+              title="LeetCode" aria-label="LeetCode"><i class="fas fa-code"></i></a>
+            <a href="https://www.hackerrank.com/profile/ashwin2006t" class="social-link hackerrank" target="_blank"
+              rel="noopener" title="HackerRank" aria-label="HackerRank"><i class="fas fa-lightbulb"></i></a>
+            <a href="https://www.hackerearth.com/@ashwin2006t/" class="social-link hackerearth" target="_blank"
+              rel="noopener" title="HackerEarth" aria-label="HackerEarth"><i class="fas fa-brain"></i></a>
+            <a href="https://www.credly.com/users/ashwin-t.a5d11353" class="social-link credly" target="_blank"
+              rel="noopener" title="Credly" aria-label="17+ Credly Badges">
+              <i class="fas fa-certificate"></i>
+            </a>
 
-</a>
+            </a>
 
           </div>
 
@@ -225,7 +241,8 @@
             <div class="orbit-dot d4"><i class="fab fa-aws"></i></div>
           </div>
           <div class="hero-photo-card">
-            <img src="Ashwin T.jpeg" alt="Ashwin T — Java Developer & ML Engineer" loading="eager" width="320" height="420"/>
+            <img src="Ashwin T.jpeg" alt="Ashwin T — Java Developer & ML Engineer" loading="eager" width="320"
+              height="420" />
             <div class="photo-glow"></div>
           </div>
           <div class="photo-chip">
@@ -275,13 +292,41 @@
         <div class="about-grid">
           <div class="about-card card reveal">
             <div class="about-quote">"</div>
-            <p>Aspiring Java Developer and pre-final year Computer Science Engineering student with a strong foundation in <strong>Core Java, object-oriented programming and problem-solving skills</strong>. Seeking an entry-level position in an organization where I can apply my technical knowledge, adapt to new technologies, follow organizational processes, and contribute effectively to team and organizational goals.</p>
+            <p>Aspiring Java Developer and pre-final year Computer Science Engineering student with a strong foundation
+              in <strong>Core Java, object-oriented programming and problem-solving skills</strong>. Seeking an
+              entry-level position in an organization where I can apply my technical knowledge, adapt to new
+              technologies, follow organizational processes, and contribute effectively to team and organizational
+              goals.</p>
           </div>
           <div class="about-right">
-            <div class="about-kv reveal"><div class="kv-icon"><i class="fas fa-map-marker-alt"></i></div><div><div class="kv-label">Location</div><div class="kv-val">Chennai, Tamil Nadu, India</div></div></div>
-            <div class="about-kv reveal"><div class="kv-icon"><i class="fas fa-university"></i></div><div><div class="kv-label">College</div><div class="kv-val">Panimalar Engineering College</div></div></div>
-            <div class="about-kv reveal"><div class="kv-icon"><i class="fas fa-star"></i></div><div><div class="kv-label">CGPA</div><div class="kv-val">9.2 / 10 <span class="pill-g">Top 5%</span></div></div></div>
-            <div class="about-kv reveal"><div class="kv-icon"><i class="fas fa-graduation-cap"></i></div><div><div class="kv-label">Graduating</div><div class="kv-val">2027 <span class="pill-g">Seeking roles now</span></div></div></div>
+            <div class="about-kv reveal">
+              <div class="kv-icon"><i class="fas fa-map-marker-alt"></i></div>
+              <div>
+                <div class="kv-label">Location</div>
+                <div class="kv-val">Chennai, Tamil Nadu, India</div>
+              </div>
+            </div>
+            <div class="about-kv reveal">
+              <div class="kv-icon"><i class="fas fa-university"></i></div>
+              <div>
+                <div class="kv-label">College</div>
+                <div class="kv-val">Panimalar Engineering College</div>
+              </div>
+            </div>
+            <div class="about-kv reveal">
+              <div class="kv-icon"><i class="fas fa-star"></i></div>
+              <div>
+                <div class="kv-label">CGPA</div>
+                <div class="kv-val">9.2 / 10 <span class="pill-g">Top 5%</span></div>
+              </div>
+            </div>
+            <div class="about-kv reveal">
+              <div class="kv-icon"><i class="fas fa-graduation-cap"></i></div>
+              <div>
+                <div class="kv-label">Graduating</div>
+                <div class="kv-val">2027 <span class="pill-g">Seeking roles now</span></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -355,12 +400,16 @@
             <div class="skill-bars">
               <div class="skill-bar-row">
                 <span>Java</span>
-                <div class="skill-bar-track"><div class="skill-bar-fill" data-pct="88"></div></div>
+                <div class="skill-bar-track">
+                  <div class="skill-bar-fill" data-pct="88"></div>
+                </div>
                 <span>88%</span>
               </div>
               <div class="skill-bar-row">
                 <span>Python</span>
-                <div class="skill-bar-track"><div class="skill-bar-fill" data-pct="82"></div></div>
+                <div class="skill-bar-track">
+                  <div class="skill-bar-fill" data-pct="82"></div>
+                </div>
                 <span>82%</span>
               </div>
             </div>
@@ -415,7 +464,7 @@
       </div>
     </section>
 
-<!-- ═══════════ PROJECTS ═══════════ -->
+    <!-- ═══════════ PROJECTS ═══════════ -->
     <section id="projects" class="section alt-bg" aria-labelledby="proj-title">
       <div class="container">
         <div class="section-header reveal">
@@ -459,16 +508,19 @@
                 <div class="card-back-tech">
                   <span>Java 24</span><span>Swing</span><span>OOP</span><span>Serialization</span><span>File I/O</span>
                 </div>
-                <p>Production-quality desktop app demonstrating enterprise Java patterns, event-driven GUI programming, and robust data persistence.</p>
+                <p>Production-quality desktop app demonstrating enterprise Java patterns, event-driven GUI programming,
+                  and robust data persistence.</p>
                 <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;">
-                  <a href="https://github.com/Ashwin-2006-t/Professional-Banking-GUI.git" target="_blank" class="cb-btn">GitHub ↗</a>
+                  <a href="https://github.com/Ashwin-2006-t/Professional-Banking-GUI.git" target="_blank"
+                    class="cb-btn">GitHub ↗</a>
                   <button class="cb-btn cb-btn2" onclick="openProjectModal('banking-system')">Details</button>
                 </div>
               </div>
             </div>
           </div>
 
-          <div class="project-card tilt-card reveal featured-card" data-tags="ml python intern" data-project="infosys-job-detection">
+          <div class="project-card tilt-card reveal featured-card" data-tags="ml python intern"
+            data-project="infosys-job-detection">
             <div class="card-inner">
               <div class="card-front">
                 <div class="pc-header">
@@ -493,9 +545,11 @@
                 <div class="card-back-tech">
                   <span>Python</span><span>Scikit-learn</span><span>NLP</span><span>TF-IDF</span><span>Streamlit</span>
                 </div>
-                <p>Built during Infosys internship. End-to-end ML system processing 10K+ job postings with 92% precision using ensemble classifiers and NLP feature extraction.</p>
+                <p>Built during Infosys internship. End-to-end ML system processing 10K+ job postings with 92% precision
+                  using ensemble classifiers and NLP feature extraction.</p>
                 <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;">
-                  <a href="https://github.com/Ashwin-2006-t/fake-job-detection-individual.git" target="_blank" class="cb-btn">GitHub ↗</a>
+                  <a href="https://github.com/Ashwin-2006-t/fake-job-detection-individual.git" target="_blank"
+                    class="cb-btn">GitHub ↗</a>
                   <button class="cb-btn cb-btn2" onclick="openProjectModal('infosys-job-detection')">Details</button>
                 </div>
               </div>
@@ -523,9 +577,11 @@
                 <div class="card-back-tech">
                   <span>Python</span><span>Pandas</span><span>Scikit-learn</span><span>Streamlit</span>
                 </div>
-                <p>EV market growth forecasting with 15+ engineered features, time-series regression modelling, and interactive scenario simulation dashboard.</p>
+                <p>EV market growth forecasting with 15+ engineered features, time-series regression modelling, and
+                  interactive scenario simulation dashboard.</p>
                 <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;">
-                  <a href="https://github.com/Ashwin-2006-t/EV_Forecasting.git" target="_blank" class="cb-btn">GitHub ↗</a>
+                  <a href="https://github.com/Ashwin-2006-t/EV_Forecasting.git" target="_blank" class="cb-btn">GitHub
+                    ↗</a>
                   <button class="cb-btn cb-btn2" onclick="openProjectModal('ev-forecasting')">Details</button>
                 </div>
               </div>
@@ -553,10 +609,47 @@
                 <div class="card-back-tech">
                   <span>Python</span><span>Pillow</span><span>NumPy</span><span>LSB</span>
                 </div>
-                <p>Secure data hiding inside images using Least Significant Bit encoding. Full CLI with encode/decode pipelines, format detection, and integrity verification.</p>
+                <p>Secure data hiding inside images using Least Significant Bit encoding. Full CLI with encode/decode
+                  pipelines, format detection, and integrity verification.</p>
                 <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;">
-                  <a href="https://github.com/Ashwin-2006-t/-steganography.git" target="_blank" class="cb-btn">GitHub ↗</a>
+                  <a href="https://github.com/Ashwin-2006-t/-steganography.git" target="_blank" class="cb-btn">GitHub
+                    ↗</a>
                   <button class="cb-btn cb-btn2" onclick="openProjectModal('steganography')">Details</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="project-card tilt-card reveal" data-tags="java spring" data-project="student-result">
+            <div class="card-inner">
+              <div class="card-front">
+                <div class="pc-header">
+                  <div class="pc-icon j5"><i class="fas fa-graduation-cap"></i></div>
+                  <div class="pc-meta">
+                    <span class="pc-year">2026</span>
+                    <span class="pc-type">Full Stack</span>
+                  </div>
+                </div>
+                <h3>Student Result Management System</h3>
+                <p class="pc-tech">Spring Boot · JPA · MySQL · REST APIs</p>
+                <ul class="pc-list">
+                  <li>Add students & manage marks with CRUD APIs</li>
+                  <li>Auto grade calculation & report generation</li>
+                  <li>Entity relationships with JPA/Hibernate</li>
+                  <li>Aggregation queries & exception handling</li>
+                </ul>
+                <div class="pc-hover-hint">Hover to flip ↻</div>
+              </div>
+              <div class="card-back">
+                <h3>Student Result System</h3>
+                <div class="card-back-tech">
+                  <span>Spring Boot</span><span>JPA</span><span>H2/MySQL</span><span>REST</span><span>Maven</span>
+                </div>
+                <p>Full-stack student result management with Spring Boot REST APIs, JPA entity relationships, aggregation queries, and automated grade calculation with report generation.</p>
+                <div style="display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem;">
+                  <a href="https://github.com/Ashwin-2006-t/StudentResultManagementSystem.git" target="_blank"
+                    class="cb-btn">GitHub ↗</a>
+                  <button class="cb-btn cb-btn2" onclick="openProjectModal('student-result')">Details</button>
                 </div>
               </div>
             </div>
@@ -566,7 +659,7 @@
       </div>
     </section>
 
-<!-- ═══════════ EXPERIENCE ═══════════ -->
+    <!-- ═══════════ EXPERIENCE ═══════════ -->
     <section id="experience" class="section" aria-labelledby="exp-title">
       <div class="container">
         <div class="section-header reveal">
@@ -592,7 +685,8 @@
               <li>Implemented CI/CD pipelines &amp; deployment</li>
               <li>Agile team collaboration on live features</li>
             </ul>
-            <a href="certificates/internship/infosys-internship-certificate.pdf" target="_blank" class="exp-cert-link"><i class="fas fa-certificate"></i> View Certificate</a>
+            <a href="certificates/internship/infosys-internship-certificate.pdf" target="_blank"
+              class="exp-cert-link"><i class="fas fa-certificate"></i> View Certificate</a>
           </div>
 
           <div class="exp-card featured reveal">
@@ -610,7 +704,8 @@
               <li>Client-facing web app deployment</li>
               <li>Modern JS frameworks training</li>
             </ul>
-            <button class="exp-cert-link" onclick="openExperienceModal('codebind')"><i class="fas fa-certificate"></i> View 5 Certificates</button>
+            <button class="exp-cert-link" onclick="openExperienceModal('codebind')"><i class="fas fa-certificate"></i>
+              View 5 Certificates</button>
           </div>
 
           <div class="exp-card reveal">
@@ -627,7 +722,8 @@
               <li>Threat detection &amp; vulnerability assessment</li>
               <li>Secure AI application development</li>
             </ul>
-            <a href="certificates/internship/steganography-internship-cert.jpg" target="_blank" class="exp-cert-link"><i class="fas fa-certificate"></i> View Certificate</a>
+            <a href="certificates/internship/steganography-internship-cert.jpg" target="_blank" class="exp-cert-link"><i
+                class="fas fa-certificate"></i> View Certificate</a>
           </div>
 
           <div class="exp-card reveal">
@@ -647,7 +743,8 @@
               <li>Market growth trend analysis across geographies</li>
             </ul>
             <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
-              <a href="certificates/internship/ev-project-internship-cert.jpg" target="_blank" class="exp-cert-link"><i class="fas fa-certificate"></i>View Certificate</a>
+              <a href="certificates/internship/ev-project-internship-cert.jpg" target="_blank" class="exp-cert-link"><i
+                  class="fas fa-certificate"></i>View Certificate</a>
             </div>
           </div>
 
@@ -655,7 +752,7 @@
       </div>
     </section>
 
-   
+
     <!-- ═══════════ CERTIFICATIONS ═══════════ -->
     <section id="certifications" class="section" aria-labelledby="cert-title">
       <div class="container">
@@ -666,52 +763,82 @@
         <div class="certs-grid">
           <div class="cert-card reveal clickable" onclick="openCertModal('infosys-java')">
             <div class="cc-icon java-ic"><i class="fab fa-java"></i></div>
-            <div class="cc-info"><h3>Java Developer Certification</h3><p>Infosys</p></div>
+            <div class="cc-info">
+              <h3>Java Developer Certification</h3>
+              <p>Infosys</p>
+            </div>
             <span class="cc-arrow">↗</span>
           </div>
           <div class="cert-card reveal clickable" onclick="openCertModal('google-analytics')">
             <div class="cc-icon goog-ic"><i class="fab fa-google"></i></div>
-            <div class="cc-info"><h3>Google Analytics</h3><p>Google</p></div>
+            <div class="cc-info">
+              <h3>Google Analytics</h3>
+              <p>Google</p>
+            </div>
             <span class="cc-arrow">↗</span>
           </div>
           <div class="cert-card reveal clickable" onclick="openCertModal('aws-cloud')">
             <div class="cc-icon aws-ic"><i class="fab fa-aws"></i></div>
-            <div class="cc-info"><h3>AWS Cloud Support Associate</h3><p>Amazon Web Services</p></div>
+            <div class="cc-info">
+              <h3>AWS Cloud Support Associate</h3>
+              <p>Amazon Web Services</p>
+            </div>
             <span class="cc-arrow">↗</span>
           </div>
           <div class="cert-card reveal clickable bundle" onclick="openCertModal('infosys-bundle')">
             <div class="cc-icon bund-ic"><i class="fas fa-briefcase"></i></div>
-            <div class="cc-info"><h3>Infosys Certifications</h3><p>Infosys Limited</p><span class="cc-count">17 Domains</span></div>
+            <div class="cc-info">
+              <h3>Infosys Certifications</h3>
+              <p>Infosys Limited</p><span class="cc-count">17 Domains</span>
+            </div>
             <span class="cc-arrow">↗</span>
           </div>
           <div class="cert-card reveal clickable bundle" onclick="openCertModal('ibm-edunet')">
             <div class="cc-icon ibm-ic"><i class="fas fa-graduation-cap"></i></div>
-            <div class="cc-info"><h3>IBM &amp; Edunet Certifications</h3><p>IBM via Edunet Foundation</p><span class="cc-count">15 Certs</span></div>
+            <div class="cc-info">
+              <h3>IBM &amp; Edunet Certifications</h3>
+              <p>IBM via Edunet Foundation</p><span class="cc-count">15 Certs</span>
+            </div>
             <span class="cc-arrow">↗</span>
           </div>
           <div class="cert-card reveal clickable" onclick="openCertModal('fullstack')">
             <div class="cc-icon fs-ic"><i class="fas fa-layer-group"></i></div>
-            <div class="cc-info"><h3>Diploma in Full Stack Dev</h3><p>CASS Academy</p><span class="cc-grade">Grade: A (83%)</span></div>
+            <div class="cc-info">
+              <h3>Diploma in Full Stack Dev</h3>
+              <p>CASS Academy</p><span class="cc-grade">Grade: A (83%)</span>
+            </div>
             <span class="cc-arrow">↗</span>
           </div>
           <div class="cert-card reveal clickable" onclick="openCertModal('oracle-cloud')">
             <div class="cc-icon ora-ic"><i class="fas fa-cloud"></i></div>
-            <div class="cc-info"><h3>Oracle Cloud Infrastructure</h3><p>Oracle</p></div>
+            <div class="cc-info">
+              <h3>Oracle Cloud Infrastructure</h3>
+              <p>Oracle</p>
+            </div>
             <span class="cc-arrow">↗</span>
           </div>
           <div class="cert-card reveal clickable" onclick="openCertModal('fusion-ai')">
             <div class="cc-icon ai-ic"><i class="fas fa-robot"></i></div>
-            <div class="cc-info"><h3>Fusion AI Foundations</h3><p>Oracle</p></div>
+            <div class="cc-info">
+              <h3>Fusion AI Foundations</h3>
+              <p>Oracle</p>
+            </div>
             <span class="cc-arrow">↗</span>
           </div>
           <div class="cert-card reveal clickable" onclick="openCertModal('machine-learning')">
             <div class="cc-icon nptel-ic"><i class="fas fa-brain"></i></div>
-            <div class="cc-info"><h3>Introduction to Machine Learning</h3><p>NPTEL, IIT Kharagpur</p></div>
+            <div class="cc-info">
+              <h3>Introduction to Machine Learning</h3>
+              <p>NPTEL, IIT Kharagpur</p>
+            </div>
             <span class="cc-arrow">↗</span>
           </div>
           <div class="cert-card reveal clickable" onclick="openCertModal('servicenow-csa')">
             <div class="cc-icon snow-ic"><i class="fas fa-tools"></i></div>
-            <div class="cc-info"><h3>ServiceNow CSA</h3><p>ServiceNow</p></div>
+            <div class="cc-info">
+              <h3>ServiceNow CSA</h3>
+              <p>ServiceNow</p>
+            </div>
             <span class="cc-arrow">↗</span>
           </div>
         </div>
@@ -725,7 +852,8 @@
           <div class="cta-glow"></div>
           <div class="cta-label">Open to Opportunities</div>
           <h2 class="cta-h" id="contact-title">Let's build something <em>great</em> together.</h2>
-          <p>Currently seeking entry-level roles in Java development, full-stack, or ML engineering at top-tier companies. Fresh perspective. Production experience. Zero ego.</p>
+          <p>Currently seeking entry-level roles in Java development, full-stack, or ML engineering at top-tier
+            companies. Fresh perspective. Production experience. Zero ego.</p>
           <div class="cta-actions">
             <a href="mailto:ashwin2006t@gmail.com" class="btn-primary magnetic">
               <i class="fas fa-envelope"></i> Send Email <span class="btn-shine"></span>
@@ -741,18 +869,96 @@
       </div>
     </section>
 
+    <!-- ═══════════ CONTACT FORM ═══════════ -->
+    <section id="contact-form" class="section alt-bg" aria-labelledby="cf-title">
+      <div class="container">
+        <div class="section-header reveal">
+          <span class="section-label">08 — Contact</span>
+          <h2 class="section-title" id="cf-title">Get in <em>Touch</em></h2>
+        </div>
+        <div class="contact-form-wrap reveal">
+          <div class="cf-info">
+            <div class="cf-info-inner">
+              <div class="cf-info-glow"></div>
+              <h3 class="cf-info-title">Let's Connect</h3>
+              <p class="cf-info-text">Have a project in mind, a job opportunity, or just want to say hello? I'd love to hear from you.</p>
+              <div class="cf-info-items">
+                <div class="cf-info-item">
+                  <div class="cf-ii-icon"><i class="fas fa-envelope"></i></div>
+                  <div>
+                    <div class="cf-ii-label">Email</div>
+                    <a href="mailto:ashwin2006t@gmail.com" class="cf-ii-val">ashwin2006t@gmail.com</a>
+                  </div>
+                </div>
+                <div class="cf-info-item">
+                  <div class="cf-ii-icon"><i class="fas fa-map-marker-alt"></i></div>
+                  <div>
+                    <div class="cf-ii-label">Location</div>
+                    <div class="cf-ii-val">Chennai, Tamil Nadu, India</div>
+                  </div>
+                </div>
+                <div class="cf-info-item">
+                  <div class="cf-ii-icon"><i class="fas fa-clock"></i></div>
+                  <div>
+                    <div class="cf-ii-label">Response Time</div>
+                    <div class="cf-ii-val">Within 24 hours</div>
+                  </div>
+                </div>
+              </div>
+              <div class="cf-info-socials">
+                <a href="https://linkedin.com/in/ashwin2006" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                <a href="https://github.com/Ashwin-2006-t" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://leetcode.com/u/Ashwin_2006_T/" target="_blank" rel="noopener" aria-label="LeetCode"><i class="fas fa-code"></i></a>
+              </div>
+            </div>
+          </div>
+          <div class="cf-form-side">
+            <form id="contactFormEl" action="https://formsubmit.co/ashwin2006t@gmail.com" method="POST">
+              <input type="hidden" name="_subject" value="New Portfolio Message!">
+              <input type="hidden" name="_captcha" value="false">
+              <input type="hidden" name="_template" value="table">
+              <input type="hidden" name="_next" value="http://localhost:3000/thanks.html">
+              <input type="text" name="_honey" style="display:none">
+              <div class="cf-group">
+                <label for="cfName" class="cf-label"><i class="fas fa-user"></i> Name</label>
+                <input type="text" id="cfName" name="name" class="cf-field" placeholder="Your full name" required autocomplete="name" />
+              </div>
+              <div class="cf-group">
+                <label for="cfEmail" class="cf-label"><i class="fas fa-at"></i> Email</label>
+                <input type="email" id="cfEmail" name="email" class="cf-field" placeholder="you@example.com" required autocomplete="email" />
+              </div>
+              <div class="cf-group">
+                <label for="cfMessage" class="cf-label"><i class="fas fa-comment-dots"></i> Message</label>
+                <textarea id="cfMessage" name="message" class="cf-field cf-textarea" placeholder="Tell me about your opportunity, project, or just say hello..." required rows="5"></textarea>
+              </div>
+              <button type="submit" class="cf-submit magnetic" id="cfSubmitBtn">
+                <i class="fas fa-paper-plane"></i>
+                <span>Send Message</span>
+                <span class="btn-shine"></span>
+              </button>
+              <div id="cfStatus" class="cf-status" aria-live="polite"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-<!-- ═══════════ FOOTER ═══════════ -->
+  <!-- ═══════════ FOOTER ═══════════ -->
   <footer role="contentinfo">
     <div class="container">
       <div class="footer-inner">
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>
+        <div>
+          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </div>
         <p>© 2026 Ashwin T · Chennai, Tamil Nadu · Built with ❤️ &amp; ☕</p>
         <div class="footer-socials">
           <a href="mailto:ashwin2006t@gmail.com" aria-label="Email"><i class="fas fa-envelope"></i></a>
-          <a href="https://linkedin.com/in/ashwin2006" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin"></i></a>
-          <a href="https://github.com/Ashwin-2006-t" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+          <a href="https://linkedin.com/in/ashwin2006" target="_blank" rel="noopener" aria-label="LinkedIn"><i
+              class="fab fa-linkedin"></i></a>
+          <a href="https://github.com/Ashwin-2006-t" target="_blank" rel="noopener" aria-label="GitHub"><i
+              class="fab fa-github"></i></a>
         </div>
       </div>
       <p class="footer-hint">
@@ -776,4 +982,5 @@
 
   <script src="script.js"></script>
 </body>
+
 </html>

@@ -84,6 +84,7 @@ function initAll() {
   initAIPersona();
   initNavMobile();
   initSmoothScroll();
+  initContactForm();
 }
 
 /* ══════════════════════════════════════════════════════════
@@ -549,6 +550,8 @@ const COMMANDS = {
     '     → 85% prediction accuracy · Interactive dashboard',
     '  <span style="color:var(--green)">4. Steganography Tool</span>  (Python · Pillow · LSB)',
     '     → Hide/extract messages in images · CLI tool',
+    '  <span style="color:var(--green)">5. Student Result Management</span>  (Spring Boot · JPA · REST)',
+    '     → CRUD APIs, grade calculation, report generation',
   ],
   contact: () => [
     '  📧 ashwin2006t@gmail.com',
@@ -674,6 +677,8 @@ const CMD_ITEMS = [
   { icon:'fas fa-university', label:'Banking System Project', action:() => openProjectModal('banking-system') },
   { icon:'fab fa-github', label:'GitHub Profile', action:() => window.open('https://github.com/Ashwin-2006-t','_blank') },
   { icon:'fab fa-linkedin', label:'LinkedIn Profile', action:() => window.open('https://linkedin.com/in/ashwin2006','_blank') },
+  { icon:'fas fa-graduation-cap', label:'Student Result Project', action:() => openProjectModal('student-result') },
+  { icon:'fas fa-paper-plane', label:'Contact Form', action:() => scrollTo('#contact-form') },
 ];
 
 function initCmdPalette() {
@@ -1184,6 +1189,15 @@ const PROJ_DATA = {
     achievements:['LSB steganography — encode text invisibly into carrier images','Encoder and decoder CLI with full argument parsing','PNG, BMP, JPEG format support with auto-detection','Minimal perceptual distortion to carrier images'],
     github:'https://github.com/Ashwin-2006-t/-steganography.git',
     cert:'certificates/internship/steganography-internship-cert.jpg'
+  },
+  'student-result': {
+    title:'Student Result Management System',
+    meta:[{icon:'fab fa-java',l:'Spring Boot'},{icon:'fas fa-database',l:'JPA + MySQL'},{icon:'fas fa-calendar',l:'2026'}],
+    desc:'A full-stack web application for managing student academic results at Panimalar Engineering College. Provides a comprehensive suite of tools for administrators and faculty to track, analyze, and report student performance. Pre-loaded with 20 students × 5 subjects = 100 marks records on startup.',
+    tech:['Spring Boot','Spring Data JPA','H2/MySQL','REST APIs','Maven','Hibernate'],
+    achievements:['Add, Edit, Delete students with full CRUD operations','Add, Edit, Delete marks for each subject per student','Auto-calculate grades (A+, A, B, C, F) based on marks obtained','Search & Sort students by name, roll number, or email','View detailed performance reports with bar and doughnut charts','Print-friendly reports directly from the browser','Dashboard with live statistics, pass rate, top performer, and top-10 chart','20 students × 5 subjects = 100 marks records pre-loaded on startup'],
+    github:'https://github.com/Ashwin-2006-t/StudentResultManagementSystem.git',
+    cert:null
   }
 };
 
@@ -1227,4 +1241,45 @@ function openExperienceModal(expId) {
       <p style="margin-top:1rem;font-size:.75rem;color:var(--text3);">Click any tile to view / download certificate</p>`;
     showModal();
   }
+}
+
+/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+   CONTACT FORM
+\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
+function initContactForm() {
+  const form = $('contactFormEl');
+  if (!form) return;
+
+  form.addEventListener('submit', (e) => {
+    const btn = $('cfSubmitBtn');
+    const status = $('cfStatus');
+    const name = $('cfName').value.trim();
+    const email = $('cfEmail').value.trim();
+    const message = $('cfMessage').value.trim();
+
+    // Basic validation
+    if (!name || !email || !message) {
+      e.preventDefault();
+      status.textContent = '\u2718 Please fill in all fields.';
+      status.className = 'cf-status error';
+      playSound('error');
+      return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      e.preventDefault();
+      status.textContent = '\u2718 Please enter a valid email address.';
+      status.className = 'cf-status error';
+      playSound('error');
+      return;
+    }
+
+    // Validation passed — let form submit naturally to FormSubmit.co
+    btn.disabled = true;
+    btn.querySelector('span').textContent = 'Sending...';
+    status.textContent = '';
+    status.className = 'cf-status';
+    playSound('success');
+    // Form submits naturally via POST
+  });
 }
