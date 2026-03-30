@@ -1250,16 +1250,20 @@ function initContactForm() {
   const form = $('contactFormEl');
   if (!form) return;
 
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
     const btn = $('cfSubmitBtn');
     const status = $('cfStatus');
-    const name = $('cfName').value.trim();
-    const email = $('cfEmail').value.trim();
-    const message = $('cfMessage').value.trim();
+    const nameInput = $('cfName');
+    const emailInput = $('cfEmail');
+    const messageInput = $('cfMessage');
 
-    // Basic validation
+    const name = nameInput.value.trim();
+    const email = emailInput.value.trim();
+    const message = messageInput.value.trim();
+
     if (!name || !email || !message) {
-      e.preventDefault();
       status.textContent = '\u2718 Please fill in all fields.';
       status.className = 'cf-status error';
       playSound('error');
@@ -1267,19 +1271,100 @@ function initContactForm() {
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      e.preventDefault();
       status.textContent = '\u2718 Please enter a valid email address.';
       status.className = 'cf-status error';
       playSound('error');
       return;
     }
 
-    // Validation passed — let form submit naturally to FormSubmit.co
     btn.disabled = true;
-    btn.querySelector('span').textContent = 'Sending...';
+    const originalBtnHTML = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Sending...</span>';
     status.textContent = '';
     status.className = 'cf-status';
-    playSound('success');
-    // Form submits naturally via POST
+    playSound('click');
+
+    try {
+      const formData = new FormData(form);
+      const response = await fetch(form.action, {
+        method: 'POST',
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      });
+
+      if (response.ok) {
+        form.reset();
+        showSuccessModal();
+      } else {
+        throw new Error('Server responded with an error');
+      }
+    } catch (err) {
+      console.error('Contact form error:', err);
+      status.textContent = '\u2718 Something went wrong. Please try again later.';
+      status.className = 'cf-status error';
+      playSound('error');
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = originalBtnHTML;
+    }
   });
 }
+
+/* ─── SUCCESS MODAL LOGIC ─────────────────────────────────── */
+let successTimer = null;
+function showSuccessModal() {
+  const modal = $('successModal');
+  if (!modal) return;
+  
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden', 'false');
+  playSound('success');
+  
+  const container = $('sParticles');
+  if (container) {
+    container.innerHTML = '';
+    for (let i = 0; i < 20; i++) {
+      const p = document.createElement('div');
+      p.className = 's-particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (3 + Math.random() * 5) + 's';
+      p.style.animationDelay = Math.random() * 2 + 's';
+      container.appendChild(p);
+    }
+  }
+
+  let count = 5;
+  const countEl = $('sCountdown');
+  const bar = $('sProgressFill');
+  if (countEl) countEl.textContent = count;
+  if (bar) {
+    bar.style.width = '100%';
+    bar.style.transition = 'none';
+    setTimeout(() => {
+      bar.style.transition = 'width 5s linear';
+      bar.style.width = '0%';
+    }, 50);
+  }
+
+  if (successTimer) clearInterval(successTimer);
+  successTimer = setInterval(() => {
+    count--;
+    if (countEl) countEl.textContent = count;
+    if (count <= 0) {
+      closeSuccessModal();
+    }
+  }, 1000);
+}
+
+function closeSuccessModal() {
+  const modal = $('successModal');
+  if (modal) {
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    playSound('close');
+  }
+  if (successTimer) {
+    clearInterval(successTimer);
+    successTimer = null;
+  }
+}

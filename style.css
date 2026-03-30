@@ -1337,3 +1337,98 @@ a.cf-ii-val:hover { color:var(--green); }
     transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 } 
+
+/* ─── SUCCESS MODAL STYLES ───────────────────────────────── */
+.s-modal .modal-content {
+  max-width: 520px;
+  padding: 3.5rem 2.5rem;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+}
+
+.s-glow {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(34, 197, 94, 0.08) 0%, transparent 70%);
+  pointer-events: none; z-index: -1;
+}
+
+.s-particles {
+  position: absolute; inset: 0; pointer-events: none; z-index: -1;
+}
+
+.s-particle {
+  position: absolute; width: 2px; height: 2px; background: var(--green);
+  border-radius: 50%; opacity: 0; animation: s-float linear infinite;
+}
+
+@keyframes s-float {
+  0% { transform: translateY(100%) scale(0); opacity: 0; }
+  20% { opacity: 0.4; }
+  80% { opacity: 0.2; }
+  100% { transform: translateY(-20%) scale(1); opacity: 0; }
+}
+
+.s-check-wrap {
+  width: 84px; height: 84px; margin: 0 auto 2rem;
+  background: rgba(34, 197, 94, 0.08);
+  border: 1px solid rgba(34, 197, 94, 0.2);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  animation: s-pop 0.6s var(--ease-spring) both;
+}
+
+@keyframes s-pop {
+  from { opacity: 0; transform: scale(0.5); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.s-check-wrap i {
+  font-size: 2.2rem; color: var(--green);
+  text-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+}
+
+.s-title {
+  font-family: var(--fh); font-size: 2rem; font-weight: 800;
+  margin-bottom: 0.8rem; letter-spacing: -0.01em;
+}
+
+.s-title em { color: var(--green); font-style: normal; }
+
+.s-subtitle {
+  color: var(--text2); font-size: 0.95rem; line-height: 1.7;
+  max-width: 380px; margin: 0 auto 2.5rem;
+}
+
+.s-timer-wrap {
+  margin-top: 2.5rem;
+}
+
+.s-timer-text {
+  font-family: var(--fm); font-size: 0.75rem; color: var(--text3);
+  letter-spacing: 0.05em; text-transform: uppercase;
+}
+
+.s-timer-text span { color: var(--green); font-weight: 700; }
+
+.s-progress-bar {
+  width: 120px; height: 2px;
+  background: rgba(255, 255, 255, 0.05);
+  margin: 0.6rem auto 0;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.s-progress-fill {
+  position: absolute; top: 0; left: 0; height: 100%;
+  background: var(--green);
+  width: 0%;
+  transform-origin: left;
+}
+
+@media (max-width: 480px) {
+  .s-modal .modal-content { padding: 3rem 1.5rem; }
+  .s-actions .btn-primary { width: 100%; justify-content: center; }
+}

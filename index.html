@@ -917,7 +917,6 @@
               <input type="hidden" name="_subject" value="New Portfolio Message!">
               <input type="hidden" name="_captcha" value="false">
               <input type="hidden" name="_template" value="table">
-              <input type="hidden" name="_next" value="http://localhost:3000/thanks.html">
               <input type="text" name="_honey" style="display:none">
               <div class="cf-group">
                 <label for="cfName" class="cf-label"><i class="fas fa-user"></i> Name</label>
@@ -977,6 +976,37 @@
       <button class="modal-close" onclick="closeModal()" aria-label="Close"><i class="fas fa-times"></i></button>
       <h2 id="modalTitle"></h2>
       <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 SUCCESS MODAL \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 -->
+  <div id="successModal" class="modal s-modal" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" onclick="closeSuccessModal()"></div>
+    <div class="modal-content s-content">
+      <button class="modal-close" onclick="closeSuccessModal()" aria-label="Close"><i class="fas fa-times"></i></button>
+      
+      <div class="s-glow"></div>
+      <div class="s-particles" id="sParticles"></div>
+
+      <div class="s-check-wrap">
+        <i class="fas fa-check"></i>
+      </div>
+      
+      <h2 class="s-title">Message <em>Sent!</em></h2>
+      <p class="s-subtitle">Thank you for reaching out! I'll review your message and get back to you within 24 hours.</p>
+      
+      <div class="s-actions">
+        <button class="btn-primary magnetic" onclick="closeSuccessModal()">
+          <i class="fas fa-check-circle"></i> Got it
+        </button>
+      </div>
+
+      <div class="s-timer-wrap">
+        <div class="s-timer-text">Closing in <span id="sCountdown">5</span>s</div>
+        <div class="s-progress-bar">
+          <div class="s-progress-fill" id="sProgressFill"></div>
+        </div>
+      </div>
     </div>
   </div>
 
