@@ -1243,40 +1243,47 @@ function openExperienceModal(expId) {
   }
 }
 
-/* \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+/* ══════════════════════════════════════════════════════════
    CONTACT FORM
-\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550 */
+══════════════════════════════════════════════════════════ */
 function initContactForm() {
   const form = $('contactFormEl');
   if (!form) return;
 
+  // ── EmailJS Config ──────────────────────────────────────
+const SERVICE_ID  = 'service_lachgcn';
+const TEMPLATE_ID = 'template_x2cscec'; // e.g. "template_xyz456"
+  // ────────────────────────────────────────────────────────
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
-    const btn = $('cfSubmitBtn');
-    const status = $('cfStatus');
-    const nameInput = $('cfName');
-    const emailInput = $('cfEmail');
+
+    const btn          = $('cfSubmitBtn');
+    const status       = $('cfStatus');
+    const nameInput    = $('cfName');
+    const emailInput   = $('cfEmail');
     const messageInput = $('cfMessage');
 
-    const name = nameInput.value.trim();
-    const email = emailInput.value.trim();
+    const name    = nameInput.value.trim();
+    const email   = emailInput.value.trim();
     const message = messageInput.value.trim();
 
+    // Validation (unchanged from your original)
     if (!name || !email || !message) {
-      status.textContent = '\u2718 Please fill in all fields.';
+      status.textContent = '✘ Please fill in all fields.';
       status.className = 'cf-status error';
       playSound('error');
       return;
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      status.textContent = '\u2718 Please enter a valid email address.';
+      status.textContent = '✘ Please enter a valid email address.';
       status.className = 'cf-status error';
       playSound('error');
       return;
     }
 
+    // Loading state (unchanged from your original)
     btn.disabled = true;
     const originalBtnHTML = btn.innerHTML;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Sending...</span>';
@@ -1285,24 +1292,18 @@ function initContactForm() {
     playSound('click');
 
     try {
-      const formData = new FormData(form);
-      const response = await fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: { 'Accept': 'application/json' }
-      });
+      // ✅ EmailJS replaces the fetch() call
+      await emailjs.sendForm(SERVICE_ID, TEMPLATE_ID, form);
 
-      if (response.ok) {
-        form.reset();
-        showSuccessModal();
-      } else {
-        throw new Error('Server responded with an error');
-      }
+      form.reset();
+      showSuccessModal(); // Your existing success modal — untouched
+
     } catch (err) {
       console.error('Contact form error:', err);
-      status.textContent = '\u2718 Something went wrong. Please try again later.';
+      status.textContent = '✘ Something went wrong. Please try again later.';
       status.className = 'cf-status error';
       playSound('error');
+
     } finally {
       btn.disabled = false;
       btn.innerHTML = originalBtnHTML;
@@ -1367,4 +1368,4 @@ function closeSuccessModal() {
     clearInterval(successTimer);
     successTimer = null;
   }
-}
+}

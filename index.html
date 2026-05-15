@@ -33,9 +33,12 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
 
+  <!-- ✅ EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script>emailjs.init("Pk5uG6P4M-ACPQoED");</script>
+
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body data-theme="dark">
 
   <!-- ═══════════ LOADING SCREEN ═══════════ -->
@@ -869,80 +872,75 @@
       </div>
     </section>
 
-    <!-- ═══════════ CONTACT FORM ═══════════ -->
-    <section id="contact-form" class="section alt-bg" aria-labelledby="cf-title">
-      <div class="container">
-        <div class="section-header reveal">
-          <span class="section-label">08 — Contact</span>
-          <h2 class="section-title" id="cf-title">Get in <em>Touch</em></h2>
-        </div>
-        <div class="contact-form-wrap reveal">
-          <div class="cf-info">
-            <div class="cf-info-inner">
-              <div class="cf-info-glow"></div>
-              <h3 class="cf-info-title">Let's Connect</h3>
-              <p class="cf-info-text">Have a project in mind, a job opportunity, or just want to say hello? I'd love to hear from you.</p>
-              <div class="cf-info-items">
-                <div class="cf-info-item">
-                  <div class="cf-ii-icon"><i class="fas fa-envelope"></i></div>
-                  <div>
-                    <div class="cf-ii-label">Email</div>
-                    <a href="mailto:ashwin2006t@gmail.com" class="cf-ii-val">ashwin2006t@gmail.com</a>
-                  </div>
-                </div>
-                <div class="cf-info-item">
-                  <div class="cf-ii-icon"><i class="fas fa-map-marker-alt"></i></div>
-                  <div>
-                    <div class="cf-ii-label">Location</div>
-                    <div class="cf-ii-val">Chennai, Tamil Nadu, India</div>
-                  </div>
-                </div>
-                <div class="cf-info-item">
-                  <div class="cf-ii-icon"><i class="fas fa-clock"></i></div>
-                  <div>
-                    <div class="cf-ii-label">Response Time</div>
-                    <div class="cf-ii-val">Within 24 hours</div>
-                  </div>
-                </div>
+ <!-- ═══════════ CONTACT FORM ═══════════ -->
+<section id="contact-form" class="section alt-bg" aria-labelledby="cf-title">
+  <div class="container">
+    <div class="section-header reveal">
+      <span class="section-label">08 — Contact</span>
+      <h2 class="section-title" id="cf-title">Get in <em>Touch</em></h2>
+    </div>
+    <div class="contact-form-wrap reveal">
+      <div class="cf-info">
+        <div class="cf-info-inner">
+          <div class="cf-info-glow"></div>
+          <h3 class="cf-info-title">Let's Connect</h3>
+          <p class="cf-info-text">Have a project in mind, a job opportunity, or just want to say hello? I'd love to hear from you.</p>
+          <div class="cf-info-items">
+            <div class="cf-info-item">
+              <div class="cf-ii-icon"><i class="fas fa-envelope"></i></div>
+              <div>
+                <div class="cf-ii-label">Email</div>
+                <a href="mailto:ashwin2006t@gmail.com" class="cf-ii-val">ashwin2006t@gmail.com</a>
               </div>
-              <div class="cf-info-socials">
-                <a href="https://linkedin.com/in/ashwin2006" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                <a href="https://github.com/Ashwin-2006-t" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
-                <a href="https://leetcode.com/u/Ashwin_2006_T/" target="_blank" rel="noopener" aria-label="LeetCode"><i class="fas fa-code"></i></a>
+            </div>
+            <div class="cf-info-item">
+              <div class="cf-ii-icon"><i class="fas fa-map-marker-alt"></i></div>
+              <div>
+                <div class="cf-ii-label">Location</div>
+                <div class="cf-ii-val">Chennai, Tamil Nadu, India</div>
+              </div>
+            </div>
+            <div class="cf-info-item">
+              <div class="cf-ii-icon"><i class="fas fa-clock"></i></div>
+              <div>
+                <div class="cf-ii-label">Response Time</div>
+                <div class="cf-ii-val">Within 24 hours</div>
               </div>
             </div>
           </div>
-          <div class="cf-form-side">
-            <form id="contactFormEl" action="https://formsubmit.co/ashwin2006t@gmail.com" method="POST">
-              <input type="hidden" name="_subject" value="New Portfolio Message!">
-              <input type="hidden" name="_captcha" value="false">
-              <input type="hidden" name="_template" value="table">
-              <input type="text" name="_honey" style="display:none">
-              <div class="cf-group">
-                <label for="cfName" class="cf-label"><i class="fas fa-user"></i> Name</label>
-                <input type="text" id="cfName" name="name" class="cf-field" placeholder="Your full name" required autocomplete="name" />
-              </div>
-              <div class="cf-group">
-                <label for="cfEmail" class="cf-label"><i class="fas fa-at"></i> Email</label>
-                <input type="email" id="cfEmail" name="email" class="cf-field" placeholder="you@example.com" required autocomplete="email" />
-              </div>
-              <div class="cf-group">
-                <label for="cfMessage" class="cf-label"><i class="fas fa-comment-dots"></i> Message</label>
-                <textarea id="cfMessage" name="message" class="cf-field cf-textarea" placeholder="Tell me about your opportunity, project, or just say hello..." required rows="5"></textarea>
-              </div>
-              <button type="submit" class="cf-submit magnetic" id="cfSubmitBtn">
-                <i class="fas fa-paper-plane"></i>
-                <span>Send Message</span>
-                <span class="btn-shine"></span>
-              </button>
-              <div id="cfStatus" class="cf-status" aria-live="polite"></div>
-            </form>
+          <div class="cf-info-socials">
+            <a href="https://linkedin.com/in/ashwin2006" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+            <a href="https://github.com/Ashwin-2006-t" target="_blank" rel="noopener" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://leetcode.com/u/Ashwin_2006_T/" target="_blank" rel="noopener" aria-label="LeetCode"><i class="fas fa-code"></i></a>
           </div>
         </div>
       </div>
-    </section>
-
-  </main>
+      <div class="cf-form-side">
+        <!-- ✅ Removed: action, method, and all Formsubmit hidden inputs -->
+        <form id="contactFormEl" novalidate>
+          <div class="cf-group">
+            <label for="cfName" class="cf-label"><i class="fas fa-user"></i> Name</label>
+            <input type="text" id="cfName" name="name" class="cf-field" placeholder="Your full name" required autocomplete="name" />
+          </div>
+          <div class="cf-group">
+            <label for="cfEmail" class="cf-label"><i class="fas fa-at"></i> Email</label>
+            <input type="email" id="cfEmail" name="email" class="cf-field" placeholder="you@example.com" required autocomplete="email" />
+          </div>
+          <div class="cf-group">
+            <label for="cfMessage" class="cf-label"><i class="fas fa-comment-dots"></i> Message</label>
+            <textarea id="cfMessage" name="message" class="cf-field cf-textarea" placeholder="Tell me about your opportunity, project, or just say hello..." required rows="5"></textarea>
+          </div>
+          <button type="submit" class="cf-submit magnetic" id="cfSubmitBtn">
+            <i class="fas fa-paper-plane"></i>
+            <span>Send Message</span>
+            <span class="btn-shine"></span>
+          </button>
+          <div id="cfStatus" class="cf-status" aria-live="polite"></div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
 
   <!-- ═══════════ FOOTER ═══════════ -->
   <footer role="contentinfo">
